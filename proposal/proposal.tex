@@ -48,7 +48,11 @@
 %   NO citations in the abstract!   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-For our project, we propose classifying Dungeons and Dragons 5th Edition magic items into ``power tiers.'' The purpose of this project is to quantify the efficiency of the various pre-defined magical items as well as predict the effectiveness of novel magic items. Out project will consist of two phases. The first it efficacy simulation to generate the observation values for our machine learning models. The second phase requires comparing the application of several machine learning models to best classify the magic items. The intended output of our classifier is to return an integral value $tier \in [0, 20]$.
+For our project, we propose classifying Dungeons and Dragons 5th Edition magic items into ``power tiers.''
+The purpose of this project is to quantify the efficiency of the various pre-defined magical items as well as predict the effectiveness of novel magic items.
+Out project will consist of two phases. The first it efficacy simulation to generate the observation values for our machine learning models.
+The second phase requires comparing the application of several machine learning models to best classify the magic items.
+The intended output of our classifier is to return an integral value $tier \in [0, 20]$.
 
 \section*{Team Members' Roles}
 
@@ -86,7 +90,23 @@ Alex Washburn
 
 \clearpage
 
-\section*{Introduction}
+\section*{Methodology}
+
+\section*{Dataset Description}
+
+The existing magic item dataset \cite{Mirror5eTools} has been pre-complied by members of the 5E.Tools team and stored in JSON format for public consumption.
+The dataset we choose is up-to-date as of August 2021.
+The dataset contains a nested structure which we will parse and flatten to a tabular, CSV form.
+With in the data set are mechanical features such as \texttt{"bonusWeapon":"+3"} and \texttt{"bonusAc":"+2"}.
+These features will be incorporated into the first phase of our project to simulate combat with and without access to the magic item's features.
+In total the dataset consists of 1384 samples and 28 features.
+We will attach 20 additional observation values based on our simulation results.
+
+\section*{Timeline}
+
+\section*{Demonstration}
+
+\section*{Evaluation}
 
 \clearpage
 
