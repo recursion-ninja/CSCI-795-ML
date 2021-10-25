@@ -53,7 +53,7 @@ The purpose of this project is to quantify the efficien
 cy of the various pre-defined magical items as well as predict the effectiveness of novel magic items.
 Out project will consist of two phases. The first it efficacy simulation to generate the observation values for our machine learning models.
 The second phase requires comparing the application of several machine learning models to best classify the magic items.
-The intended output of our classifier is to return an integral value $tier \in [0, 20]$.
+The intended output of our classifier is to return an rational value $tier \in [0, 20]$.
 
 \section*{Team Members' Roles}
 
@@ -66,7 +66,7 @@ John Lee
 	\item Perform EDA to obtain insights of the dataset.
 	\item Build, tune, and evaluate the following models:
 	\begin{itemize}
-		\item Logistic Regression
+		\item KNN-Classifier
 		\item Naive Bayes Classifier
 		\item Support Vector Machine models.
 	\end{itemize}
@@ -82,7 +82,7 @@ Alex Washburn
 	\item Perform EDA to obtain insights of the dataset.
 	\item Build, tune, and evaluate the following models:
 	\begin{itemize}
-		\item Logistic Regression
+		\item KNN-Classifier
 		\item Naive Bayes Classifier
 		\item Support Vector Machine models.
 	\end{itemize}
@@ -100,21 +100,34 @@ However, the most popular TTRPG, Dungeons and Dragons (D\&D) has been used as a 
 This particular previous work, while quite notable, focused entirely on non-combat aspects of D\&D, eschewing a core component and past time of D\&D; resolving conflict via numerical simulation.
 In our project we will grapple with this numeric aspect of D\&D, focusing on a small subset of the D\&D combat system; possession and usage of magical items.
 To the best of the author's knowledge, the proposed project will be the first serious attempt to apply machine learning to a numerical aspect of D\&D.
-Consequently, there is no previous 
+Consequently, there is no \emph{known} previous on which to draw a comparison.
 
 
 \section*{Methodology}
 
+We propose producing an effective classifier for D\&D magic items by trying KNN-Classifier, Naive Bayes Classifier, and Support Vector Machine techniques.
+In D\&D, the power level of a character or party of characters is often stratified into numerical tiers ranging from $1$ to $20$.
+We intend to correspond a magic item's power level to be the maximum D\&D party level for which possessing the magic item notably improves suitability when compared to the same scenario without access to the magic item.
+To do this we propose using a database of existing D\&D magic items with their already defined features.
+Then we will attach 20 observations to each magic item based on the results of combat simulation.
+
 The principle requirement of the AI is to have data to feed it.
 Unfortunately, the D\&D 5e system has many arbitrary elements, and is difficult to quantify.
 To this end, a combat simulator will be used to generate information for training.
-This will be used to generate quantification data, the more levels of difference the item is able to make up for the more powerful the item is.
-These will be represented as one of D\&D's primary measurements of power, level difference.
-Fractions will be allowed because most items cannot feasibly compensate for an entire level's worth of difference in power.\\
-\\
-After this data is generated, it will be fed into the AI as item entries. Each property will be expressed as an effective Level increase per class/specialization.
-Additionally, the AI will be used to generate more data in the form of theoretical items.
-These will then be run through combat simulations and fed back in as additional data or used for testing.\\
+The simulation results will be used to generate quantified observation as to the effect the possession of a magic item in a party of character has on their chance of surviving an encounter.
+These will be represented as one of D\&D's primary measurements of power, level difference.\\
+
+We plan to compile $20$ pairs of one character party at the corresponding level ($[1,20]$) and a combat encounter for the party which ought to be ``deadly'' on average.
+For each pair, we will simulate combat $100$ times both with access to the magic item and without access.
+The ratio of the mean survivability with the magic item to the mean over the mean survivability without the magic item will be our observed value.
+A positive ratio greater than $1.1$ will be considered ``improved suvivability'' and re-encoded to a binary observations.\\
+
+After this data is generated, we will experiment with different classifier techniques.
+For the KNN-Classifier and the SVM classifier, we will create $20$ binary classifiers of the form ``Aids at Level $n$'' where $n \in [1,20]$.
+These classifier will be run in parallel and the maximum level classifier which returns a positive result will be treated as the aggregate classifier's resulting ``power level'' classification.
+When constructing the Naive Bayes Classifier we will tune the model to output the magic item's ``power level'' directly.
+We anticipate, the Naive Bayes Classifier will sufficiently model the magic item power level space and can be used to generate more data in the form of theoretical items.
+These may then be run through combat simulations and fed back in as additional data or used for testing.\\
 
 
 \section*{Dataset Description}
