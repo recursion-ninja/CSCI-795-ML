@@ -1,0 +1,96 @@
+\documentclass[12pt]{diazessay}
+
+\usepackage{bashful}
+\usepackage{hyperref}
+
+%----------------------------------------------------------------------------------------
+%	Comment this out if you do not have `texcount` installed on your $PATH
+%----------------------------------------------------------------------------------------
+%\bash
+%command -v texcount &> /dev/null && texcount -sum -1 csci-724-paper.tex
+%\END
+
+%Shorthand formatting commands
+\newcommand{\F}[1]{$\quad$\texttt{#1}}
+\newcommand{\A}{$\alpha$}
+\newcommand{\B}{$\beta$}
+\newcommand{\Bool   }{\texttt{Bool}}
+\newcommand{\Nat    }{\texttt{Natural}}
+\newcommand{\Integer}{\texttt{Integer}}
+\newcommand{\Double }{\texttt{Double}}
+\newcommand{\List   }{\texttt{List}}
+\newcommand{\Type   }{\texttt{Type}}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+\vspace*{-2.25cm}
+\title{\texttt{\LARGE{Predicting Magical Item Effectiveness in \\Dungeons and Dragons 5th Edition} \\\vspace{-0.35cm} {\large A Hunter College CSCI-795 Project Proposal}\\\normalsize\url{https://github.com/recursion-ninja/CSCI-795-ML}}} % Title and subtitle
+
+\author{\texttt{{\Huge Team:}\\\vspace*{-0.5em} 
+		John Lee \\\vspace*{-0.5em} 
+		Alex Washburn}} % Author and institution
+
+\date{\texttt{\today}} % Date, use \date{} for no date
+
+\pagestyle{empty}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the title section
+
+\vspace{-1cm}
+\section*{Abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   NO citations in the abstract!   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For our project, we propose classifying Dungeons and Dragons 5th Edition magic items into ``power tiers.'' The purpose of this project is to quantify the efficiency of the various pre-defined magical items as well as predict the effectiveness of novel magic items. Out project will consist of two phases. The first it efficacy simulation to generate the observation values for our machine learning models. The second phase requires comparing the application of several machine learning models to best classify the magic items. The intended output of our classifier is to return an integral value $tier \in [0, 20]$.
+
+\section*{Team Members' Roles}
+
+John Lee
+
+\begin{itemize}
+	
+	\item Integrate magic item data into combat simulator.
+	\item Generate observation values from combat simulation.
+	\item Perform EDA to obtain insights of the dataset.
+	\item Build, tune, and evaluate the following models:
+	\begin{itemize}
+		\item Logistic Regression
+		\item Naive Bayes Classifier
+		\item Support Vector Machine models.
+	\end{itemize}
+	
+\end{itemize}
+
+Alex Washburn
+
+\begin{itemize}
+	
+	\item Collect and collate exhaustive magic item data.
+	\item Clean and normalize the dataset using gameplay keywords.
+	\item Perform EDA to obtain insights of the dataset.
+	\item Build, tune, and evaluate the following models:
+	\begin{itemize}
+		\item Logistic Regression
+		\item Naive Bayes Classifier
+		\item Support Vector Machine models.
+	\end{itemize}
+
+\end{itemize}
+
+\clearpage
+
+\section*{Introduction}
+
+\clearpage
+
+\bibliographystyle{acm}
+\bibliography{project}
+
+\end{document}
