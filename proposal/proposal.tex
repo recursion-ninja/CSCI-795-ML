@@ -92,6 +92,10 @@ Alex Washburn
 
 \section*{Methodology}
 
+The principle requirement of the AI is to have data to feed it. Unfortunately, the D&D 5e system has many arbitrary elements, and is difficult to quantify. To this end, a combat simulator will be used to generate information for training. This will be used to generate quantification data, the more levels of difference the item is able to make up for the more powerful the item is. These will be represented as one of D&D's primary measurements of power, level difference. Fractions will be allowed because most items cannot feasibly compensate for an entire level's worth of difference in power.\\
+\\
+After this data is generated, it will be fed into the AI as item entries. Each property will be experessed as an effective Level increase per class/specialization. Additionally, the AI will be used to generate more data in the form of theoretical items. These will then be run through combat simulations and fed back in as additional data or used for testing.\\
+
 \section*{Dataset Description}
 
 The existing magic item dataset \cite{Mirror5eTools} has been pre-complied by members of the 5E.Tools team and stored in JSON format for public consumption.
