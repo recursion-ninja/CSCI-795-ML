@@ -49,7 +49,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 For our project, we propose classifying Dungeons and Dragons 5th Edition magic items into ``power tiers.''
-The purpose of this project is to quantify the efficiency of the various pre-defined magical items as well as predict the effectiveness of novel magic items.
+The purpose of this project is to quantify the efficien
+cy of the various pre-defined magical items as well as predict the effectiveness of novel magic items.
 Out project will consist of two phases. The first it efficacy simulation to generate the observation values for our machine learning models.
 The second phase requires comparing the application of several machine learning models to best classify the magic items.
 The intended output of our classifier is to return an integral value $tier \in [0, 20]$.
@@ -90,7 +91,19 @@ Alex Washburn
 
 \clearpage
 
+\section*{Motivation}
+
+Some work has been done on applying ML to table top role playing games (TTRPGs) in the past \cite{rameshkumar-bailey-2020-storytelling, macinnes2019d, cavanaugh2016machine, faria2019adaptive, riedl2013interactive}.
+Much of the work revolves around the more tractable problem of selecting appropriate ambient music choices for players to experience based on the current emotional tone of the game \cite{ferreira2017mtg, risi2020increasing, padovani2017bardo, ferreira2020computer}.
+However, the most popular TTRPG, Dungeons and Dragons (D\&D) has been used as a difficult test-bed for ML experimentation \cite{martin2018dungeons}.
+This particular previous work, while quite notable, focused entirely on non-combat aspects of D\&D, eschewing a core component and past time of D\&D; resolving conflict via numerical simulation.
+In our project we will grapple with this numeric aspect of D\&D, focusing on a small subset of the D\&D combat system; possession and usage of magical items.
+To the best of the author's knowledge, the proposed project will be the first serious attempt to apply machine learning to a numerical aspect of D\&D.
+Consequently, there is no previous 
+
+
 \section*{Methodology}
+
 
 \section*{Dataset Description}
 
@@ -107,6 +120,12 @@ We will attach 20 additional observation values based on our simulation results.
 \section*{Demonstration}
 
 \section*{Evaluation}
+
+For the classification performance, we will be using the standard metrics presented in class, notably precision, recall/sensitivity, and AUC for all three ML techniques described above.
+We will also inspect the confusion matrix manually as it may reveal troublesome areas that a given classifier struggles with and other areas where it excels.
+It may be possible to create a hybrid classifier combining different techniques and applying the results to their strength and using other techniques to predict in their weaker areas.
+Due to the lack of \emph{known} previous work, there is no baseline research to compare the project results to.
+The authors how to collaborate with Professor Raja to determine an \emph{analogous} work on which comparisons can be made.
 
 \clearpage
 

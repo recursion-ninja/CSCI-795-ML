@@ -1,0 +1,28 @@
+attachedSpells
+			"baseItem": "warhammer|PHB",
+			"type": "M",
+			"resist": [	"fire"],
+			"conditionImmune": ["exhaustion"],
+			"rarity": "artifact",
+			"reqAttune": true,
+			"weight": 2,
+			"weaponCategory": "martial",
+			"property": [ "V" ],
+			"dmg1": "1d8",
+			"dmgType": "B",
+			"dmg2": "1d10",
+			"grantsProficiency": true,
+			"bonusWeapon": "+3",
+			"weapon": true,
+                        "bonusSpellAttack": "+1",                                  
+                        "bonusSpellSaveDc": "+1",        
+"ability" { "static" { "con" 19 } }, 
+                          "charges": 6,
+recharge: "Dawn"
+                        "curse": true,
+                        "weight": 65,
+                        "bonusAc": "+2",
+                        "ac": 18,
+                        "strength": "15", // required
+                        "stealth": true,
+             "entries": 8>{@damage 2d6}*.
