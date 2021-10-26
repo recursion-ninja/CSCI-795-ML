@@ -1,5 +1,6 @@
 \documentclass[12pt]{diazessay}
 
+\usepackage{amsfonts}
 \usepackage{bashful}
 \usepackage{hyperref}
 
@@ -27,8 +28,8 @@
 \vspace*{-2.25cm}
 \title{\texttt{\LARGE{Predicting Magical Item Effectiveness in \\Dungeons and Dragons 5th Edition} \\\vspace{-0.35cm} {\large A Hunter College CSCI-795 Project Proposal}\\\normalsize\url{https://github.com/recursion-ninja/CSCI-795-ML}}} % Title and subtitle
 
-\author{\texttt{{\Huge Team:}\\\vspace*{-0.5em} 
-		John Lee \\\vspace*{-0.5em} 
+\author{\texttt{{\Huge Team:}\\\vspace*{-0.5em}
+		John Lee \\\vspace*{-0.5em}
 		Alex Washburn}} % Author and institution
 
 \date{\texttt{\today}} % Date, use \date{} for no date
@@ -49,18 +50,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 For our project, we propose classifying Dungeons and Dragons 5th Edition magic items into ``power tiers.''
-The purpose of this project is to quantify the efficien
-cy of the various pre-defined magical items as well as predict the effectiveness of novel magic items.
-Out project will consist of two phases. The first it efficacy simulation to generate the observation values for our machine learning models.
-The second phase requires comparing the application of several machine learning models to best classify the magic items.
-The intended output of our classifier is to return an rational value $tier \in [0, 20]$.
+The purpose of this project is to quantify the efficiency of the various pre-defined magical items as well as predict the effectiveness of novel magic items.
+Out project will consist of two phases. In the first, we will perform efficacy simulations to generate the observation values for our machine learning models.
+The second phase requires comparing the application of several machine learning models to best classify the magic items into ``power tiers.''
+The intended output of our classifier is to return an integral value $tier \in [0, 20] \subset \mathbb{N}$.
 
 \section*{Team Members' Roles}
 
 John Lee
 
 \begin{itemize}
-	
+
 	\item Integrate magic item data into combat simulator.
 	\item Generate observation values from combat simulation.
 	\item Perform EDA to obtain insights of the dataset.
@@ -70,13 +70,13 @@ John Lee
 		\item Naive Bayes Classifier
 		\item Support Vector Machine models.
 	\end{itemize}
-	
+
 \end{itemize}
 
 Alex Washburn
 
 \begin{itemize}
-	
+
 	\item Collect and collate exhaustive magic item data.
 	\item Clean and normalize the dataset using gameplay keywords.
 	\item Perform EDA to obtain insights of the dataset.
@@ -125,6 +125,7 @@ A positive ratio greater than $1.1$ will be considered ``improved suvivability''
 After this data is generated, we will experiment with different classifier techniques.
 For the KNN-Classifier and the SVM classifier, we will create $20$ binary classifiers of the form ``Aids at Level $n$'' where $n \in [1,20]$.
 These classifier will be run in parallel and the maximum level classifier which returns a positive result will be treated as the aggregate classifier's resulting ``power level'' classification.
+The ``power level'' classification will be a value $tier \in [0,20] \subset \mathbb{N}$, where a result of $0$ indicates that possession of the magical item does not provide an advantage at any level.
 When constructing the Naive Bayes Classifier we will tune the model to output the magic item's ``power level'' directly.
 We anticipate, the Naive Bayes Classifier will sufficiently model the magic item power level space and can be used to generate more data in the form of theoretical items.
 These may then be run through combat simulations and fed back in as additional data or used for testing.\\
@@ -132,11 +133,12 @@ These may then be run through combat simulations and fed back in as additional d
 
 \section*{Dataset Description}
 
-The existing magic item dataset \cite{Mirror5eTools} has been pre-complied by members of the 5E.Tools team and stored in JSON format for public consumption.
+The existing magic item dataset \cite{Mirror5eTools} has been pre-complied by members of the 5e Tools open source community and stored in JSON format for public consumption.
 The dataset we choose is up-to-date as of August 2021.
-The dataset contains a nested structure which we will parse and flatten to a tabular, CSV form.
+The dataset contains a nested structure which we will parse and flatten to a tabular CSV form.
 With in the data set are mechanical features such as \texttt{"bonusWeapon":"+3"} and \texttt{"bonusAc":"+2"}.
 These features will be incorporated into the first phase of our project to simulate combat with and without access to the magic item's features.
+Subsequently, these features will be used by the ML techniques above to train classifiers.
 In total the dataset consists of 1384 samples and 28 features.
 We will attach 20 additional observation values based on our simulation results.
 
@@ -160,16 +162,18 @@ We will attach 20 additional observation values based on our simulation results.
 
 \section*{Demonstration}
 
-The AI should be capable of taking an input in the form of an item, and determining its power level.
-Additionaly, it should be able to randomly generate items that have a specified poewr level.
-The type of item should cover any variety of class, so for class-specific items it would have to be accurate to similar items of that specified power.
+The final ML classifier should be capable of taking an input in the form of a magic item, and determining its power level.
+Additionally, using the Naive Bayes Classifier, it should be capable of randomly generating items that have a specified power level.
+The type of item should cover any variety of classes, so for class-specific items it would have to be accurate to similar items of that specified power.
 Generation of items would likely be completely random, as the difficulty of seeking specific bounded results would complicate matters.
 This could be a stretch goal should the base implementation prove successful.
+We plan to present our results in the form of a 2 minute video presentation.
 
 
 \section*{Evaluation}
 
 For the classification performance, we will be using the standard metrics presented in class, notably precision, recall/sensitivity, and AUC for all three ML techniques described above.
+Additionally, we will consider the execution time of the classifiers require to output a result, as we expect that the KNN classifier will deficient in this aspect.
 We will also inspect the confusion matrix manually as it may reveal troublesome areas that a given classifier struggles with and other areas where it excels.
 It may be possible to create a hybrid classifier combining different techniques and applying the results to their strength and using other techniques to predict in their weaker areas.
 Due to the lack of \emph{known} previous work, there is no baseline research to compare the project results to.
