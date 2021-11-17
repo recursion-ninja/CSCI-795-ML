@@ -1,0 +1,14 @@
+packages:
+  .
+        
+installdir:
+  $PWD/bin
+
+install-method:
+  copy
+            
+overwrite-policy:
+  always
+
+with-compiler:
+  ghc-9.2.1

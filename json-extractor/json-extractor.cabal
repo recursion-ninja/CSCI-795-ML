@@ -1,0 +1,76 @@
+cabal-version:      3.6
+name:               json-extractor
+version:            0.1.0.0
+author:             Alex Washburn
+maintainer:         github@recursion.ninja
+
+extra-source-files: README.md
+
+executable json-extractor
+
+    main-is:
+      Main.hs
+
+    other-modules:
+      Item
+      Parameters
+
+    hs-source-dirs:
+      src
+
+    build-depends:
+      aeson,
+      base < 5.0,
+      bytestring,
+      cassava,
+      optparse-applicative,
+      text
+
+    default-language: Haskell2010
+
+    ghc-options:
+      -- Optimization flags
+      -O2
+      -threaded
+      -fexcess-precision
+      -fexpose-all-unfoldings
+      -flate-specialise
+      -foptimal-applicative-do
+      -fspecialize-aggressively
+      -fstatic-argument-transformation
+      -- Usability flags
+      -fdiagnostics-color=always
+      -fhide-source-paths
+      -j
+      -- Sanity check warnings
+      -Wall
+      -Wcompat
+      -Wderiving-defaults
+      -Wdodgy-foreign-imports
+      -Wduplicate-exports
+      -Wempty-enumerations
+      -Widentities
+      -Wincomplete-patterns
+      -Wincomplete-record-updates
+      -Wincomplete-uni-patterns
+      -Wmissing-deriving-strategies          
+      -Wmissing-fields
+      -Wmissing-home-modules
+      -Wmissing-signatures
+      -Wmissing-export-lists
+      -Wnoncanonical-monad-instances
+      -Wnoncanonical-monoid-instances
+      -Woverflowed-literals
+      -Woverlapping-patterns
+      -Wredundant-constraints
+      -Wsemigroup
+      -Wtabs
+      -Wunrecognised-warning-flags
+      -Wunused-binds
+      -Wunused-do-bind
+      -Wunused-foralls
+      -Wunused-imports
+      -Wunused-matches
+      -Wunused-packages
+      -Wwrong-do-bind
+      -Wpartial-fields
