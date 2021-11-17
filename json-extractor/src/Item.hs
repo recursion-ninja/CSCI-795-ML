@@ -1,33 +1,33 @@
-{-# LANGUAGE DeriveAnyClass     #-}
-{-# LANGUAGE DeriveGeneric      #-}
-{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DeriveAnyClass             #-}
+{-# LANGUAGE DeriveGeneric              #-}
+{-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings  #-}
-{-# LANGUAGE RecordWildCards    #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE RecordWildCards            #-}
 
 module Item
   ( Item()
   ) where
 
 import Control.Applicative
-import Data.Aeson hiding ((.=))
-import Data.Aeson.KeyMap (lookup)
-import Data.Aeson.Types (Parser)
-import Data.Csv (DefaultOrdered(..), Field, ToField(..), ToNamedRecord(..), (.=), namedRecord)
-import Data.Foldable (fold)
-import Data.List (intersperse)
+import Data.Aeson          hiding ((.=))
+import Data.Aeson.KeyMap   (lookup)
+import Data.Aeson.Types    (Parser)
+import Data.Csv            (DefaultOrdered(..), Field, ToField(..), ToNamedRecord(..), namedRecord, (.=))
+import Data.Foldable       (fold)
+import Data.List           (intersperse)
 import Data.Maybe
 import Data.String
-import Data.Text hiding (intersperse)
+import Data.Text           hiding (intersperse)
 import GHC.Generics
-import Text.Read 
-import Prelude   hiding (break, lookup, null)
+import Prelude             hiding (break, lookup, null)
+import Text.Read
 
 
 newtype Bonus = Bonus Int
     deriving newtype (Eq, Num, Show)
     deriving stock   (Generic)
-  
+
 
 instance FromJSON Bonus where
 
@@ -37,7 +37,7 @@ instance FromJSON Bonus where
       where
         parseBonus (sign, val) = do
             f <- case sign of
-                  '+' -> Just id 
+                  '+' -> Just id
                   '-' -> Just negate
                   _   -> Nothing
             v <- readMaybe $ unpack val :: Maybe Word
@@ -51,7 +51,7 @@ instance ToField Bonus where
 
 newtype Dice = Dice (Word, Word)
     deriving stock (Eq, Generic, Show)
-  
+
 
 instance FromJSON Dice where
 
@@ -73,7 +73,7 @@ instance ToField Dice where
 
 newtype Range = Range (Word, Word)
     deriving stock (Eq, Generic, Show)
-  
+
 
 instance FromJSON Range where
 
@@ -272,4 +272,4 @@ boolToField = fromString . show . fromEnum
 
 
 existsWithin :: Key -> Object -> Parser Bool
-existsWithin key obj = pure . maybe False (const True) $ lookup key obj
+existsWithin key = pure . isJust . lookup key

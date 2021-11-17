@@ -1,6 +1,6 @@
-{-# Language DerivingStrategies #-}
-{-# Language GeneralizedNewtypeDeriving #-}
-{-# Language OverloadedStrings  #-}
+{-# LANGUAGE DerivingStrategies         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings          #-}
 
 module Parameters
   ( parseCommandLineOptions
@@ -8,7 +8,7 @@ module Parameters
   , InputFile(..)
   ) where
 
-import Data.Aeson.Key (Key)
+import Data.Aeson.Key      (Key)
 import Data.Foldable
 import Options.Applicative
 

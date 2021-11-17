@@ -4,17 +4,17 @@ module Main
   ( main
   ) where
 
-import Item
-import Parameters
-import Control.Monad ((<=<))
-import Data.Aeson (Object, Value(..), eitherDecode')
-import Data.Aeson.Key (Key, toString)
-import Data.Aeson.Types (parseEither, parseJSON)
+import           Control.Monad        ((<=<))
+import           Data.Aeson           (Object, Value(..), eitherDecode')
+import           Data.Aeson.Key       (Key, toString)
 import qualified Data.Aeson.KeyMap    as KM
+import           Data.Aeson.Types     (parseEither, parseJSON)
 import           Data.ByteString.Lazy (ByteString)
 import qualified Data.ByteString.Lazy as BS
-import Data.Csv   (encodeDefaultOrderedByName)
-import Data.Foldable (fold, toList)
+import           Data.Csv             (encodeDefaultOrderedByName)
+import           Data.Foldable        (fold, toList)
+import           Item
+import           Parameters
 
 
 main :: IO ()
