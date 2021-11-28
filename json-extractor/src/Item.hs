@@ -87,7 +87,7 @@ instance FromJSON Range where
 
 instance ToField Range where
 
-    toField (Range (s,l)) = fromString $ fold [show s, "/|/", show l]
+    toField (Range (s,l)) = fromString $ fold [show s, "/", show l]
 
 
 data  Item
