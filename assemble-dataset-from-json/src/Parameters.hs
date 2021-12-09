@@ -5,28 +5,23 @@
 module Parameters
   ( parseCommandLineOptions
   , Parameters(..)
-  , InputFile(..)
   ) where
 
-import Data.Aeson.Key      (Key)
 import Data.Foldable
 import Options.Applicative
 
 
 data  Parameters
     = Parameters
-    { inputFiles :: [InputFile]
+    { filesWithRanks :: [FilePath]
+    , filesWithStats :: [FilePath]
     , outputFile :: FilePath
     }
     deriving stock (Show)
 
 
-newtype InputFile = Input { getInputFile :: (Key, FilePath) }
-    deriving newtype (Read, Show)
-
-
 defaultOutputCSV :: FilePath
-defaultOutputCSV = "magic-items.csv"
+defaultOutputCSV = "dnd-5e-monsters.csv"
 
 
 -- |
@@ -45,16 +40,25 @@ parserInformation = info commandLineOptions fullDesc
   where
     commandLineOptions =
         Parameters
-          <$> inputFilesSpec
+          <$> inputRanksSpec
+          <*> inputStatsSpec
           <*> outputFileSpec
 
 
-    inputFilesSpec :: Parser [InputFile]
-    inputFilesSpec = option auto $ fold
-        [ short 'i'
-        , long  "inputs"
-        , help  "input file(s)"
-        , metavar "[ ( KEY, FILE ) ]"
+    inputRanksSpec :: Parser [FilePath]
+    inputRanksSpec = option auto $ fold
+        [ short 'r'
+        , long  "ranks"
+        , help  "ranking file(s)"
+        , metavar "[ FILE ]"
+        ]
+
+    inputStatsSpec :: Parser [FilePath]
+    inputStatsSpec = option auto $ fold
+        [ short 's'
+        , long  "stats"
+        , help  "stat-block file(s)"
+        , metavar "[ FILE ]"
         ]
 
     outputFileSpec :: Parser FilePath
