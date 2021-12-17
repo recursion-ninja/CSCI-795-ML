@@ -1,4 +1,4 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main
@@ -13,15 +13,15 @@ import           Data.Aeson.Types     (parseEither, parseJSON)
 import           Data.ByteString.Lazy (ByteString)
 import qualified Data.ByteString.Lazy as BS
 import           Data.Csv             (DefaultOrdered, ToNamedRecord, encodeDefaultOrderedByName)
-import           Data.Foldable        (fold, toList)
 import           Data.Either
+import           Data.Foldable        (fold, toList)
 import qualified Data.Map.Strict      as Map
 import           Data.Maybe           (isJust)
 import           GHC.Exts             (IsList(fromList))
-import           System.FilePath.Glob
-import           Parameters
 import           Monster.Elo
 import           Monster.StatBlock
+import           Parameters
+import           System.FilePath.Glob
 
 
 main :: IO ()
@@ -77,7 +77,7 @@ extractFromKey key root =
         arrayMay =
           \case
             Array arr -> Just arr
-            _ -> Nothing
+            _         -> Nothing
     in  maybe missingKey parseMany $ KM.lookup key root >>= arrayMay
 
 
@@ -98,4 +98,4 @@ matchRankToStat ranks = partitionEithers . fmap f . toList
 
 isModifierEntry :: Value -> Bool
 isModifierEntry (Object km) = isJust $ KM.lookup "_copy" km
-isModifierEntry _ = False
+isModifierEntry _           = False

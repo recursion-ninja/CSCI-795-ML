@@ -4,8 +4,8 @@ module Monster.Label
   ( Label(..)
   ) where
 
-import Data.Coerce
 import Data.Char
+import Data.Coerce
 
 
 newtype Label = Label String

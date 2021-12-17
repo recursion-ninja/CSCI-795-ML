@@ -15,7 +15,7 @@ data  Parameters
     = Parameters
     { filesWithRanks :: [FilePath]
     , filesWithStats :: [FilePath]
-    , outputFile :: FilePath
+    , outputFile     :: FilePath
     }
     deriving stock (Show)
 

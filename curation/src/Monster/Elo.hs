@@ -2,9 +2,9 @@
 {-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE OverloadedLists            #-}
-{-# LANGUAGE Strict       #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE Strict                     #-}
 
 {-# LANGUAGE LambdaCase                 #-}
 {-# LANGUAGE RecordWildCards            #-}
@@ -24,10 +24,10 @@ import Data.Maybe
 import Data.String
 import Data.Text           (Text, unpack)
 import GHC.Generics
+import Monster.Label
 import Prelude             hiding (break, lookup, null)
 import Text.HTML.TagSoup
 import Text.Read
-import Monster.Label
 
 
 extractionKeyForRanks :: Key
@@ -97,4 +97,4 @@ tryGetTextOfHTML = getTextFromTags . unpack
     getTextTag =
       \case
         TagText v -> [v]
-        _ -> []
+        _         -> []

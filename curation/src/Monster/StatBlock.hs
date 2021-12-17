@@ -2,10 +2,10 @@
 {-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase                 #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE RecordWildCards            #-}
-{-# LANGUAGE Strict       #-}
+{-# LANGUAGE Strict                     #-}
 
 module Monster.StatBlock
   ( StatBlock()
@@ -22,17 +22,17 @@ import Data.Aeson.Types    (Parser)
 import Data.Char
 import Data.Csv            (DefaultOrdered(..), Field, ToField(..), ToNamedRecord(..), namedRecord, (.=))
 import Data.Foldable       (fold, null, toList)
-import Data.List           (intersperse, intercalate)
+import Data.Functor        ((<&>))
+import Data.List           (intercalate, intersperse)
 import Data.Maybe
-import Data.String
-import Data.Text           (unpack, uncons)
-import Data.Text           ()
 import Data.Scientific
-import GHC.Generics
+import Data.String
+import Data.Text           (uncons, unpack)
 import GHC.Exts            (IsList(fromList))
-import Prelude             hiding (break, lookup, null)
-import Text.Read (readMaybe)
+import GHC.Generics
 import Monster.Label
+import Prelude             hiding (break, lookup, null)
+import Text.Read           (readMaybe)
 
 
 extractionKeyForStats :: Key
@@ -224,7 +224,7 @@ instance DefaultOrdered StatBlock where
 instance FromJSON Bonus where
 
     parseJSON = withText "Bonus" $ \txt ->
-        let errMsg = fail $ "Cound not parse Bonus: '" <> unpack txt <> "'"
+        let errMsg = fail $ "Could not parse Bonus: '" <> unpack txt <> "'"
         in  maybe errMsg pure $ uncons txt >>= parseBonus
       where
         parseBonus (sign, val) = do
@@ -249,7 +249,7 @@ instance FromJSON MonsterSize where
               'S':_ -> Small
               'T':_ -> Tiny
               _     -> Medium
-          
+
 
 data ModifierBlock = Junk
 
@@ -270,25 +270,25 @@ instance FromJSON StatBlock where
         monsterHitPoints                     <- getHitPoint   obj
         monsterArmor                         <- getArmorClass obj
 
-        monsterSpeedBurrow                   <- obj `getSpeed` "burrow" 
-        monsterSpeedClimb                    <- obj `getSpeed` "climb"  
-        monsterSpeedFly                      <- obj `getSpeed` "fly"    
-        monsterSpeedSwim                     <- obj `getSpeed` "swim"   
-        monsterSpeedWalk                     <- obj `getSpeed` "walk"   
+        monsterSpeedBurrow                   <- obj `getSpeed` "burrow"
+        monsterSpeedClimb                    <- obj `getSpeed` "climb"
+        monsterSpeedFly                      <- obj `getSpeed` "fly"
+        monsterSpeedSwim                     <- obj `getSpeed` "swim"
+        monsterSpeedWalk                     <- obj `getSpeed` "walk"
 
-        monsterStatStrength                  <- obj `getStat` "str" 
-        monsterStatDexterity                 <- obj `getStat` "dex" 
-        monsterStatConstitution              <- obj `getStat` "con" 
-        monsterStatIntelligence              <- obj `getStat` "int" 
-        monsterStatWisdom                    <- obj `getStat` "wis" 
-        monsterStatCharisma                  <- obj `getStat` "cha" 
+        monsterStatStrength                  <- obj `getStat` "str"
+        monsterStatDexterity                 <- obj `getStat` "dex"
+        monsterStatConstitution              <- obj `getStat` "con"
+        monsterStatIntelligence              <- obj `getStat` "int"
+        monsterStatWisdom                    <- obj `getStat` "wis"
+        monsterStatCharisma                  <- obj `getStat` "cha"
 
-        monsterSaveStrength                  <- obj `getSave` "str" 
-        monsterSaveDexterity                 <- obj `getSave` "dex" 
-        monsterSaveConstitution              <- obj `getSave` "con" 
-        monsterSaveIntelligence              <- obj `getSave` "int" 
-        monsterSaveWisdom                    <- obj `getSave` "wis" 
-        monsterSaveCharisma                  <- obj `getSave` "cha" 
+        monsterSaveStrength                  <- obj `getSave` "str"
+        monsterSaveDexterity                 <- obj `getSave` "dex"
+        monsterSaveConstitution              <- obj `getSave` "con"
+        monsterSaveIntelligence              <- obj `getSave` "int"
+        monsterSaveWisdom                    <- obj `getSave` "wis"
+        monsterSaveCharisma                  <- obj `getSave` "cha"
 
         monsterBlindSight                    <- hasTagFrom obj "senseTags" ["B"]
         monsterDarkVision                    <- hasTagFrom obj "senseTags" ["D", "SD"]
@@ -309,36 +309,36 @@ instance FromJSON StatBlock where
         monsterDamageImmuneSlashing          <- obj `hasImmunity` "slashing"
         monsterDamageImmuneThunder           <- obj `hasImmunity` "thunder"
 
-        monsterDamageResistAcid              <- obj `hasResist` "acid"        
-        monsterDamageResistBludgeoning       <- obj `hasResist` "bludgeoning" 
-        monsterDamageResistCold              <- obj `hasResist` "cold"        
-        monsterDamageResistFire              <- obj `hasResist` "fire"        
-        monsterDamageResistForce             <- obj `hasResist` "force"       
-        monsterDamageResistLightning         <- obj `hasResist` "lightning"   
-        monsterDamageResistNecrotic          <- obj `hasResist` "necrotic"    
-        monsterDamageResistPiercing          <- obj `hasResist` "piercing"    
-        monsterDamageResistPoison            <- obj `hasResist` "poison"      
-        monsterDamageResistPsychic           <- obj `hasResist` "psychic"     
-        monsterDamageResistRadiant           <- obj `hasResist` "radiant"     
-        monsterDamageResistSlashing          <- obj `hasResist` "slashing"    
-        monsterDamageResistThunder           <- obj `hasResist` "thunder"     
+        monsterDamageResistAcid              <- obj `hasResist` "acid"
+        monsterDamageResistBludgeoning       <- obj `hasResist` "bludgeoning"
+        monsterDamageResistCold              <- obj `hasResist` "cold"
+        monsterDamageResistFire              <- obj `hasResist` "fire"
+        monsterDamageResistForce             <- obj `hasResist` "force"
+        monsterDamageResistLightning         <- obj `hasResist` "lightning"
+        monsterDamageResistNecrotic          <- obj `hasResist` "necrotic"
+        monsterDamageResistPiercing          <- obj `hasResist` "piercing"
+        monsterDamageResistPoison            <- obj `hasResist` "poison"
+        monsterDamageResistPsychic           <- obj `hasResist` "psychic"
+        monsterDamageResistRadiant           <- obj `hasResist` "radiant"
+        monsterDamageResistSlashing          <- obj `hasResist` "slashing"
+        monsterDamageResistThunder           <- obj `hasResist` "thunder"
 
-        monsterInflictConditionBlinded       <- obj `canInflictCondition` "blinded"       
-        monsterInflictConditionCharmed       <- obj `canInflictCondition` "charmed"       
-        monsterInflictConditionDeafened      <- obj `canInflictCondition` "deafened"      
-        monsterInflictConditionFrightened    <- obj `canInflictCondition` "frightened"    
-        monsterInflictConditionGrappled      <- obj `canInflictCondition` "grappled"      
-        monsterInflictConditionIncapacitated <- obj `canInflictCondition` "incapacitated" 
-        monsterInflictConditionInvisible     <- obj `canInflictCondition` "invisible"     
-        monsterInflictConditionParalyzed     <- obj `canInflictCondition` "paralyzed"     
-        monsterInflictConditionPetrified     <- obj `canInflictCondition` "petrified"     
-        monsterInflictConditionPoisoned      <- obj `canInflictCondition` "poisoned"      
-        monsterInflictConditionProne         <- obj `canInflictCondition` "prone"         
-        monsterInflictConditionRestrained    <- obj `canInflictCondition` "restrained"    
-        monsterInflictConditionStunned       <- obj `canInflictCondition` "stunned"       
-        monsterInflictConditionUnconscious   <- obj `canInflictCondition` "unconscious"   
+        monsterInflictConditionBlinded       <- obj `canInflictCondition` "blinded"
+        monsterInflictConditionCharmed       <- obj `canInflictCondition` "charmed"
+        monsterInflictConditionDeafened      <- obj `canInflictCondition` "deafened"
+        monsterInflictConditionFrightened    <- obj `canInflictCondition` "frightened"
+        monsterInflictConditionGrappled      <- obj `canInflictCondition` "grappled"
+        monsterInflictConditionIncapacitated <- obj `canInflictCondition` "incapacitated"
+        monsterInflictConditionInvisible     <- obj `canInflictCondition` "invisible"
+        monsterInflictConditionParalyzed     <- obj `canInflictCondition` "paralyzed"
+        monsterInflictConditionPetrified     <- obj `canInflictCondition` "petrified"
+        monsterInflictConditionPoisoned      <- obj `canInflictCondition` "poisoned"
+        monsterInflictConditionProne         <- obj `canInflictCondition` "prone"
+        monsterInflictConditionRestrained    <- obj `canInflictCondition` "restrained"
+        monsterInflictConditionStunned       <- obj `canInflictCondition` "stunned"
+        monsterInflictConditionUnconscious   <- obj `canInflictCondition` "unconscious"
 
-        monsterMultiAttack                   <- canMultiAttack obj 
+        monsterMultiAttack                   <- canMultiAttack obj
         monsterSpellcasting                  <- canCastSpells  obj
 
         monsterDamageTags                    <- getTagList obj "damageTags"
@@ -544,7 +544,7 @@ getSpeed obj k = obj .:? "speed" >>=
               maybe (pure 0) (\y -> fromObj y <|> fromNum y))
   where
     fromObj = withObject     "SpeedSubList" $ \z -> z .:? "number" .!= 0
-    fromNum = withScientific "SpeedSubList" $ pure . fromMaybe 0 . toBoundedInteger
+    fromNum = withScientific "SpeedSubList" $ pure . sum . toBoundedInteger
 
 
 {-# SCC getStat #-}
@@ -559,39 +559,39 @@ getSave obj k = obj .:? "save" >>= maybe (pure 0) (withObject "SaveList" $ \x ->
 
 {-# SCC hasImmunity #-}
 hasImmunity :: Object -> String -> Parser Bool
-hasImmunity obj k = obj .:? "immune" .!= zed >>= existance f
+hasImmunity obj k = obj .:? "immune" .!= zed >>= existence f
   where
     f x = textualEquality k x <|> withObject "immune" (`hasImmunity` k) x
 
 
 {-# SCC hasResist #-}
 hasResist :: Object -> String -> Parser Bool
-hasResist obj k = (obj .:? "resist" .!= zed) >>= existance f
+hasResist obj k = (obj .:? "resist" .!= zed) >>= existence f
   where
     f x = textualEquality k x <|> withObject "resist" (`hasResist` k) x
 
 
 {-# SCC hasTagFrom #-}
 hasTagFrom :: Foldable f => Object -> Key -> f String -> Parser Bool
-hasTagFrom obj label ks = obj .:? label .!= zed >>= existance (textualInclusion ks)
+hasTagFrom obj label ks = obj .:? label .!= zed >>= existence (textualInclusion ks)
 
 
 {-# SCC canInflictCondition #-}
 canInflictCondition :: Object -> String -> Parser Bool
 canInflictCondition obj k = (||) <$> f <*> g
   where
-    f = obj .:? "conditionInflict"      .!= [] >>= existance (textualEquality k)
-    g = obj .:? "conditionInflictSpell" .!= [] >>= existance (textualEquality k)    
+    f = obj .:? "conditionInflict"      .!= [] >>= existence (textualEquality k)
+    g = obj .:? "conditionInflictSpell" .!= [] >>= existence (textualEquality k)
 
 
 {-# SCC canMultiAttack #-}
 canMultiAttack :: Object -> Parser Bool
 canMultiAttack obj =
-    obj .:? "actionTags" .!= zed >>= existance (textualEquality "Multiattack")
+    obj .:? "actionTags" .!= zed >>= existence (textualEquality "Multiattack")
 
 
 canCastSpells :: Object -> Parser Bool
-canCastSpells obj = obj .:? "spellcastingTags" .!= zed >>= pure . not . null
+canCastSpells obj = (obj .:? "spellcastingTags" .!= zed) <&> (not . null)
 
 
 getTagList :: FromJSON a => Object -> Key -> Parser [a]
@@ -607,9 +607,9 @@ textualInclusion :: Foldable f => f String -> Value -> Parser Bool
 textualInclusion txts = withText (intercalate "," $ toList txts) $ pure . (`elem` txts) . unpack
 
 
-{-# SCC existance #-}
-existance :: Traversable t => (a -> Parser Bool) -> t a -> Parser Bool
-existance f = fmap or . traverse f
+{-# SCC existence #-}
+existence :: Traversable t => (a -> Parser Bool) -> t a -> Parser Bool
+existence f = fmap or . traverse f
 
 
 zed :: Array
