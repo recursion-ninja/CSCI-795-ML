@@ -16,6 +16,6 @@ echo "Curating D&D Monster data-set"
 echo "  using Elo ranks from $rank"
 echo "  and Stat-blocks from $stat"
 echo ""
-CMD="$exe -r \"$rank/*.json\" -s \"$stat/bestiary-*.json\" -o $file"
+CMD="$exe -r '$rank/*.json' -s '$stat/bestiary-*.json' -o '$file'"
 echo "$CMD"
 $CMD
