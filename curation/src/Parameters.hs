@@ -46,7 +46,7 @@ parserInformation = info commandLineOptions fullDesc
 
 
     inputRanksSpec :: Parser [FilePath]
-    inputRanksSpec = option auto $ fold
+    inputRanksSpec = some . strOption $ fold
         [ short 'r'
         , long  "ranks"
         , help  "ranking file(s)"
@@ -54,7 +54,7 @@ parserInformation = info commandLineOptions fullDesc
         ]
 
     inputStatsSpec :: Parser [FilePath]
-    inputStatsSpec = option auto $ fold
+    inputStatsSpec = some . strOption $ fold
         [ short 's'
         , long  "stats"
         , help  "stat-block file(s)"

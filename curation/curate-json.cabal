@@ -1,12 +1,12 @@
 cabal-version:      3.6
-name:               assemble-dataset-from-json
+name:               curate-json
 version:            0.1.0.0
 author:             Alex Washburn
 maintainer:         github@recursion.ninja
 
 extra-source-files: README.md
 
-executable assemble-dataset-from-json
+executable curate-json
 
     main-is:
       Main.hs
