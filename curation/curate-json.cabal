@@ -22,7 +22,6 @@ executable curate-json
 
     build-depends:
       aeson,
-      aeson-pretty,
       base < 5.0,
       bytestring,
       cassava,
