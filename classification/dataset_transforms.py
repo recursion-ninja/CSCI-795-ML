@@ -1,7 +1,14 @@
-import numpy     as np
+# It is nice to remove the deprecation warnings.
+# They really distract from the important output!
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+# Can't do anything without Python's triumvirate...
+import numpy             as np
 import matplotlib.pyplot as plt
+import pandas            as pd
+
 import pathlib   as p
-import pandas    as pd
 import functools as f
 
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, cross_val_predict
