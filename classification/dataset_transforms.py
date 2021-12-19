@@ -208,7 +208,6 @@ def seperate_data(data_frame):
 # Intended to be convieient for model selection and tuning.
 def train_valid_test(X_in, Y_in, validation_size, test_size):
     label_classes = list(sorted(Y_in.unique()))
-    print(label_classes)
     splitter = lambda x, y, n: train_test_split(x, y, test_size=n, random_state=STATIC_SEED, stratify=y)
     X_full,  X_test,  Y_full,  Y_test  = splitter(X_in  , Y_in  , test_size)
     X_train, X_valid, Y_train, Y_valid = splitter(X_full, Y_full, validation_size)

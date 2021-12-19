@@ -14,8 +14,6 @@ from scipy   import stats
 
 monster_data = datum.retreive_monster_dataset(tagged_trait=True, standardized_label_classes=5, decorrelate=0.6)
 
-print(monster_data.iloc[: ,20:40].describe())
-
 # Split off the last column as the label vector.
 X, Y = datum.seperate_data(monster_data)
 
