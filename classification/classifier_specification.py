@@ -16,7 +16,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 STATIC_SEED = 0xf90b36c2
 
 
-def model_evaluation(classifier_label, classifier, dataset_params, final_evaluation=False, param_grid=None, best_hyperparameters=None):
+def model_evaluation(classifier_label, classifier, dataset_params, final_evaluation=False, hyperspace_params=None, best_hyperparameters=None):
 
 
     #################################
@@ -39,9 +39,9 @@ def model_evaluation(classifier_label, classifier, dataset_params, final_evaluat
     # If we don't already have best parameters...
     # Let's go find them!
     if best_hyperparameters is None:
-        if param_grid is None:
-            raise ValueError("If you do not specify the 'best_hyperparameters', then you must specify 'param_grid'!")
-        best_hyperparameters = model_selection(classifier, param_grid, X_train_part, Y_train_part)
+        if hyperspace_params is None:
+            raise ValueError("If you do not specify the 'best_hyperparameters', then you must specify 'hyperspace_params'!")
+        best_hyperparameters = classifier_specification(classifier, hyperspace_params, X_train_part, Y_train_part)
 
 
     #################################
@@ -124,7 +124,7 @@ def train_valid_test(X_in, Y_in, validation_size, test_size):
 
 
 # We tune the model by determining which hyperparamaters perform best.
-def model_selection(classifier, param_grid, X_train_part, Y_train_part):
+def classifier_specification(classifier, param_grid, X_train_part, Y_train_part):
     result_classifier = GridSearchCV(classifier, param_grid, scoring='accuracy', cv=4, verbose=1, n_jobs=-1,)
     result_classifier.fit(X_train_part, Y_train_part)
     best_hyperparameters = result_classifier.best_params_

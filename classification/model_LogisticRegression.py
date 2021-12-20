@@ -1,7 +1,16 @@
-from model_selection      import STATIC_SEED, model_evaluation
-from numpy                import linspace
-from sklearn.linear_model import LogisticRegression
+from classifier_specification import STATIC_SEED, model_evaluation
+from numpy                    import linspace
+from sklearn.linear_model     import LogisticRegression
 
+
+#########################################
+###   Model Specific Definitions:
+#########################################
+
+
+classifier  = LogisticRegression()
+
+designation = 'Logistic Regression'
 
 feature_extraction    = { 'tagged_trait'               : True
                         , 'standardized_label_classes' : 5
@@ -15,7 +24,6 @@ search_grid_options   = { 'penalty'     : ['elasticnet','l1','l2']
                         , 'random_state': [STATIC_SEED]
                         , 'l1_ratio'    : linspace(0, 1, num=13)
                         }
-
 hyperparameter_values = { 'penalty'     : 'l2'
                         , 'solver'      : 'lbfgs'
                         , 'C'           : 0.05
@@ -24,4 +32,22 @@ hyperparameter_values = { 'penalty'     : 'l2'
                         , 'random_state': STATIC_SEED
                         }
 
-model_evaluation("Logistic Regression", LogisticRegression(), dataset_params=feature_extraction, param_grid=search_grid_options, best_hyperparameters=hyperparameter_values)
+
+#########################################
+###   Generic Definitions:
+#########################################
+
+
+def best_classifier():
+    return (classifier.set_params(hyperparameter_values))
+
+
+evaluation_parameters = { 'classifier_label'     : designation
+                        , 'classifier'           : classifier
+                        , 'dataset_params'       : feature_extraction
+                        , 'hyperspace_params'    : search_grid_options
+                        , 'best_hyperparameters' : hyperparameter_values
+                        }
+
+
+model_evaluation(**evaluation_parameters)

@@ -1,5 +1,15 @@
-from model_selection  import STATIC_SEED, model_evaluation
+from classifier_specification  import STATIC_SEED, model_evaluation
 from sklearn.ensemble import RandomForestClassifier
+
+
+#########################################
+###   Model Specific Definitions:
+#########################################
+
+
+classifier  = RandomForestClassifier()
+
+designation = 'Random Forest'
 
 
 feature_extraction    = { 'tagged_trait'               : True
@@ -23,4 +33,22 @@ hyperparameter_values = { 'n_estimators' : 150
                         , 'random_state' : STATIC_SEED
                         }
 
-model_evaluation("Random Forest", RandomForestClassifier(), dataset_params=feature_extraction, param_grid=search_grid_options, best_hyperparameters=hyperparameter_values)
+
+#########################################
+###   Generic Definitions:
+#########################################
+
+
+def best_classifier():
+    return (classifier.set_params(hyperparameter_values))
+
+
+evaluation_parameters = { 'classifier_label'     : designation
+                        , 'classifier'           : classifier
+                        , 'dataset_params'       : feature_extraction
+                        , 'hyperspace_params'    : search_grid_options
+                        , 'best_hyperparameters' : hyperparameter_values
+                        }
+
+
+model_evaluation(**evaluation_parameters)
