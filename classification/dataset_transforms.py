@@ -145,21 +145,21 @@ def standarize_data_set(df, colName='Elo Rank', class_count=None):
         df.loc[:,colName] +=10
         setType(df, colName, np.uint8)
         df.drop(df.loc[df[colName] >= 20].index, inplace=True)
-        df.loc[:,colName] +=1
+#        df.loc[:,colName] +=1
 
     elif class_count == 10:
         df.loc[:,colName] *=2.5
         df.loc[:,colName] +=5
         setType(df, colName, np.uint8)
         df.drop(df.loc[df[colName] >= 10].index, inplace=True)
-        df.loc[:,colName] +=1
+#        df.loc[:,colName] +=1
 
     elif class_count == 5:
         df.loc[:,colName] *=1.33
         df.loc[:,colName] +=3
         setType(df, colName, np.uint8)
         df.drop(df.loc[df[colName] >= 5].index, inplace=True)
-        df.loc[:,colName] +=1
+#        df.loc[:,colName] +=1
     else:
         df.loc[:,colName] *=0.5
         df.loc[:,colName] +=1
