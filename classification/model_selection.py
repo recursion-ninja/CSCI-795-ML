@@ -16,7 +16,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 STATIC_SEED = 0xf90b36c2
 
 
-def model_evaluation(classifier_label, classifier, dataset_params, evaluation=None, param_grid=None, best_hyperparameters=None):
+def model_evaluation(classifier_label, classifier, dataset_params, final_evaluation=False, param_grid=None, best_hyperparameters=None):
 
 
     #################################
@@ -59,7 +59,7 @@ def model_evaluation(classifier_label, classifier, dataset_params, evaluation=No
 
     # If we are not using the finalized model,
     # only evaluate using the validation dataset!
-    if evaluation != 'finalized':
+    if not final_evaluation:
         X_learn = X_train_part
         X_eval  = X_valid
         Y_learn = Y_train_part
