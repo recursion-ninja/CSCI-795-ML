@@ -1,14 +1,16 @@
-from model_selection     import STATIC_SEED, model_evaluation
+from model_selection   import STATIC_SEED, model_evaluation
 from sklearn.neighbors import KNeighborsClassifier
+
+import numpy as np
 
 
 feature_extraction    = { 'tagged_trait'               : True
                         , 'standardized_label_classes' : 5
                         , 'decorrelate'                : 0.6
                         }
-search_grid_options   = { 'n_neighbors': np.arange(1,37, 2)
-                        , 'p': [1, 2, 5,  10, 20, 30, 50, 100]
-                        , 'weights': ["uniform", "distance"]
+search_grid_options   = { 'n_neighbors' : np.arange(1, 37, 2)
+                        , 'p'           : [1, 2, 5, 10, 20, 30, 50, 100]
+                        , 'weights'     : ["uniform", "distance"]
                         }
 hyperparameter_values = None
 
