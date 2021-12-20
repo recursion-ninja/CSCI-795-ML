@@ -15,7 +15,7 @@ search_grid_options   = { 'n_estimators'      : [50, 100, 150, 200]
 #                        , 'gamma'             : [ i/10.0 for i in range(3) ]
                         , 'objective'         : ['multi:softprob']
                         , 'use_label_encoder' : [False]
-                        , 'num_class'         : [3]
+                        , 'num_class'         : [5]
                         }
 
 hyperparameter_values = None
