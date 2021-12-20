@@ -41,7 +41,7 @@ def model_evaluation(classifier_label, classifier, dataset_params, evaluation=No
     if best_hyperparameters is None:
         if param_grid is None:
             raise ValueError("If you do not specify the 'best_hyperparameters', then you must specify 'param_grid'!")
-        best_hyperparameters = model_selection(LogisticRegression(), param_grid, X_train_part, Y_train_part)
+        best_hyperparameters = model_selection(classifier, param_grid, X_train_part, Y_train_part)
 
 
     #################################
