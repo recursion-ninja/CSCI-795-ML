@@ -254,28 +254,15 @@ def dropColumns_Names(df, names):
 def setType(df, colName, colType):
     df[colName] = df[colName].astype(colType)
 
+
+def inspect_confusion_matrix(Y_true, Y_pred):
+    matrix = metrics.confusion_matrix(Y_true, Y_pred)
+    maxVal = max(np.concatenate(matrix).flat, key=lambda x: x)
+    padLen = len(str(maxVal))
     
-
-
-sns.set(style="white")
-
-#mean = np.zeros(3)
-#cov = np.random.uniform(.2, .4, (3, 3))
-#cov += cov.T
-#cov[np.diag_indices(3)] = 1
-#data = np.random.multivariate_normal(mean, cov, 100)
-#df = pd.DataFrame(data, columns=["X", "Y", "Z"])
-
-def corrfunc(x, y, **kws):
-    r, _ = stats.pearsonr(x, y)
-    ax = plt.gca()
-    ax.annotate("r = {:.2f}".format(r), xy=(.1, .9), xycoords=ax.transAxes)
-
-
-def correlation_grid(df,filepath='correlation'):
-    g = sns.PairGrid(df, palette=["red"])
-#    g.map_upper(plt.scatter, s=10)
-#    g.map_diag(sns.distplot, kde=False)
-    g.map_lower(sns.kdeplot, cmap="Blues_d")
-    g.map_lower(corrfunc)
-    plt.savefig('.png')
+    print("Confusion matrix:")
+    for row in matrix:
+        print("  ", sep='', end='')
+        for col in row:
+            print(str(col).rjust(padLen), " ", sep='', end='')
+        print()

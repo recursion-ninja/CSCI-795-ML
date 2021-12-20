@@ -2,10 +2,9 @@ import dataset_transforms as datum
 import numpy              as np
 
 # The domain specific dependencies.
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.preprocessing import LabelBinarizer
-from sklearn import metrics
-from scipy   import stats
+from sklearn.neural_network import MLPClassifier
+from sklearn                import metrics
+from scipy                  import stats
 
 
 #################################
@@ -27,23 +26,31 @@ X_train_full, X_train_part, X_valid, X_test, Y_train_full, Y_train_part, Y_valid
 
 # First, we want to determine the best hyperparameters.
 # To do so we generate a list of potential values.
-param_grid =    { 'alpha'     : [10**(i - 4) for i in range(0,9)]
-                , 'fit_prior' : [False, True]
+param_grid =    { 'activation'     : ['identity', 'logistic', 'tanh', 'relu']
+                , 'solver'         : ['lbfgs', 'sgd', 'adam']
+                , 'alpha'          : [10**(i - 4) for i in range(0,9)]
+                , 'learning_rate'  : ['constant', 'invscaling', 'adaptive'] 
+                , 'early_stopping' : [False, True]
+                , 'random_state'   : [datum.STATIC_SEED]
                 }
 
-best_hyperparameters = None
-#best_hyperparameters =  { 'alpha': 0.01
-#                        , 'fit_prior': True
-#                        }
+best_hyperparameters =  { 'activation'     : 'logistic'
+                        , 'solver'         : 'adam'
+                        , 'alpha'          : 0.1
+                        , 'learning_rate'  : 'constant'
+                        , 'early_stopping' : False
+                        , 'random_state'   : datum.STATIC_SEED
+                        }
 
 # If we don't already have best parameters...
 # Let's go find them!
 if best_hyperparameters == None:
-    best_hyperparameters = datum.model_selection(MultinomialNB(), param_grid, X_train_part, Y_train_part)
+    best_hyperparameters = datum.model_selection(MLPClassifier(), param_grid, X_train_part, Y_train_part)
 
-classifier_NB = MultinomialNB(**best_hyperparameters)
+classifier_NB = MLPClassifier(**best_hyperparameters)
+Y_score = classifier_NB.fit(X_train_part, Y_train_part) 
 
-print("Built the Multinomial Naïve Bayes model")
+print("Built the support vector model")
 print("Using hyperparameters:")
 for k,v in best_hyperparameters.items():
     print(" ",k,"=",v)
@@ -58,10 +65,10 @@ print()
 # Build a new classifier using the entire training set.
 # Incorperate what we learned during hyperparameter tuning
 # and classifier perfomance evaluation.
-classifier_NB = MultinomialNB(**best_hyperparameters)
+classifier_NB = MLPClassifier(**best_hyperparameters)
 classifier_NB.fit(X_train_full, Y_train_full)
 
-print("Built the Multinomial Naïve Bayes classifier")
+print("Built the support vector classifier")
 print("Using hyperparameters:")
 for k,v in best_hyperparameters.items():
     print(" ",k,"=",v)
@@ -71,7 +78,20 @@ print()
 Y_score = classifier_NB.predict(X_test)
 
 datum.describe_data_set(X_test, "Generated predictions for the test data set containing:")
-datum.inspect_confusion_matrix(Y_test, Y_score)
+
+def inspect_confusion_matrix(Y_true, Y_pred):
+    matrix = metrics.confusion_matrix(Y_true, Y_pred)
+    maxVal = max(np.concatenate(matrix).flat, key=lambda x: x)
+    padLen = len(str(maxVal))
+    
+    print("Confusion matrix:")
+    for row in matrix:
+        print("  ", sep='', end='')
+        for col in row:
+            print(str(col).rjust(padLen), " ", sep='', end='')
+        print()
+
+inspect_confusion_matrix(Y_test, Y_score)
 
 print("Precision Score:", round(metrics.precision_score(Y_test, Y_score, average='weighted'), 4))
 print("Recall Score:   ", round(metrics.recall_score(   Y_test, Y_score, average='weighted'), 4))
