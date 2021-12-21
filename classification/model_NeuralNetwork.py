@@ -63,7 +63,7 @@ tiered_parameters     = {  5: t_05
 
 
 def best_classifier(tiers=5):
-    return (classifier.set_params(hyperparameter_values))
+    return classifier.set_params(**hyperparameter_values)
 
 
 def tier_parameters(tiers=5):
@@ -72,6 +72,10 @@ def tier_parameters(tiers=5):
 
 def main():
     model_evaluation(**evaluation_parameters)
+#    clf = best_classifier()
+#    print("Layers  :", clf.n_layers_      )
+#    print("Outputs :", clf.n_outputs_     )
+#    print("Function:", clf.out_activation_)
 
 
 if __name__ == "__main__":
