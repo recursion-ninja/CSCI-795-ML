@@ -105,11 +105,12 @@ monster lethality than the supplied CR score.
 
 \begin{itemize}
 	\item Retrofitted and patched D\&D combat simulator script (too much effort).
+	\item Build and evaluated KNN, Logistic Regression, and XGBoost models.
 	\item Authored project report and constructed presentation slide deck.
 	\item Built, tuned, and evaluated the following models:
 	\begin{itemize}
 		\item KNN-Classifier
-		\item Naive Bayes Classifier
+		\item Logisitc Regression Classifier
 		\item XGBoost Classifier.
 	\end{itemize}
 \end{itemize}
@@ -123,7 +124,7 @@ monster lethality than the supplied CR score.
 	\begin{itemize}
 	\item Built, tuned, and evaluated the following models:
 		\item Decision Tree Classifier
-		\item Logisitc Regression Classifier
+		\item Naive Bayes Classifier
 		\item Multi-layer Perceptron Classifier
 		\item Random Forest Classifier
 		\item Suport Vector (One-vs-one) Classifier
@@ -418,7 +419,9 @@ The Evaluation results are listed in Table \ref{tab:tier05}, Table \ref{tab:tier
 
 Originally, the plan was to do a more in-depth analysis of magical items. This hit a snag when great difficulty was found with the automated combat simulator being used for the dataset generation. In particular, the libraries had many conflicts and missing sections. The uploader had accidentally pushed an experimental version, which called upon new functions not found in the original. Additionally, an entire section of the simulation would have remained broken, greatly reducing the accuracy of the predictions in regards to creatures and classes with spell-casting capability. We scaled this back even further, attempting to simulate basic combat between brawlers and simple creatures, only to get heavily skewed results that were highly questionable, such as a greater than 70\% loss rate for aboleths against itself out of 10000 runs. Similarly, team combat ended the same way, rendering even a simple simulation of basic mechanics completely useless.
 \newline
-Eventually, it was decided to use a dataset that already had computed values based on effectiveness. This use of "Elo's rating system" is based on the same one used for competitive zero-sum games, and is relatively well-understood. Although the original goal had to be changed, it was done quickly with little down-time.
+Eventually, it was decided to use a dataset that already had computed values based on effectiveness. This use of "Elo rating system" is based on the same one used for competitive zero-sum games, and is relatively well understood. The source used their own \href{https://www.dndcombat.com/dndcombat/Welcome.do}{\texttt{AI-based combat simulator}} with working class features to generate the ELO ratings, based off of survival chances and victories scored by \href{https://www.dndcombat.com/code_updates.html?v=3.51}{textt{millions of simulated fights}} run by various individuals. Although the original goal had to be changed, it was done quickly with little down-time.
+\newline
+
 
 \subsection{Lessons Learned}
 
