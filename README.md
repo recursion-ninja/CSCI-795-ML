@@ -1,4 +1,4 @@
-# Hunter College CSCI-795 project
+# Hunter College CSCI-795 Project
 
 # Introduction to Machine Learning
 
@@ -6,7 +6,7 @@
 
  - Alex Washburn (@recursion-ninja)
 
- - "John"  @johnl11235
+ - "John"  (@johnl11235)
 
 ---
 
