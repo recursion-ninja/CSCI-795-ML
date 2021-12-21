@@ -7,14 +7,14 @@ Compares all predicted values for all classifiers, for visual reference.
 import classifier_specification as modsel
 import featureset_specification as datum
 #Import the models
-import model_KNN as KNN
-import model_SVM as SVM
+import model_KNN                as KNN
+import model_SVM                as SVM
 import model_LogisticRegression as LRG
-import model_NaiveBayes as NB
-import model_DecisionTree as DT
-import model_RandomForest as RF
-import model_NeuralNetwork as NN
-import model_XGBoost as XGB
+import model_NaiveBayes         as NB
+import model_DecisionTree       as DT
+import model_RandomForest       as RF
+import model_NeuralNetwork      as NN
+import model_XGBoost            as XGB
 
 #Tester
 def bulk_test_entries():

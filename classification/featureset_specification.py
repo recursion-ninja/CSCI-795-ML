@@ -12,7 +12,7 @@ default_feature_specification = { 'tagged_trait'               : True
                                 }
 
 
-def retreive_monster_dataset(compress=True, textual=False, tagged_damage=False, tagged_spell=False, tagged_trait=False, standardized_label_classes=None, decorrelate=None):
+def retrieve_monster_dataset(compress=True, textual=False, tagged_damage=False, tagged_spell=False, tagged_trait=False, standardized_label_classes=None, decorrelate=None):
     absPath = p.Path(__file__).parent.resolve()
     dataset = pd.read_csv(absPath.parent.joinpath('data','dnd-5e-monsters.csv'), sep=',')
 
