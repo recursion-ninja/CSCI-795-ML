@@ -1,4 +1,5 @@
 from classifier_specification import STATIC_SEED, model_evaluation
+from featureset_specification import default_feature_specification
 
 import xgboost as xgb
 
@@ -14,10 +15,6 @@ classifier  = xgb.XGBClassifier()
 
 designation = 'X Gradient Boosting'
 
-feature_extraction    = { 'tagged_trait'               : True
-                        , 'standardized_label_classes' : class_count
-                        , 'decorrelate'                : 0.6
-                        }
 hyperparameter_values = { 'objective'         : 'multi:softprob'
                         , 'eval_metric'       : 'mlogloss'
                         , 'num_class'         : class_count
@@ -47,13 +44,13 @@ search_grid_options   = { 'objective'         : [ 'multi:softprob' ]
 #########################################
 
 
-def best_classifier():
+def best_classifier(tiers=5):
     return (classifier.set_params(hyperparameter_values))
 
 
 evaluation_parameters = { 'classifier_label'     : designation
                         , 'classifier'           : classifier
-                        , 'dataset_params'       : feature_extraction
+                        , 'dataset_params'       : default_feature_specification
                         , 'hyperspace_params'    : search_grid_options
                         , 'best_hyperparameters' : hyperparameter_values
                         }

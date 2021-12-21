@@ -1,4 +1,5 @@
 from classifier_specification import STATIC_SEED, model_evaluation
+from featureset_specification import default_feature_specification
 from numpy                    import linspace
 from sklearn.linear_model     import LogisticRegression
 
@@ -12,10 +13,6 @@ classifier  = LogisticRegression()
 
 designation = 'Logistic Regression'
 
-feature_extraction    = { 'tagged_trait'               : True
-                        , 'standardized_label_classes' : 5
-                        , 'decorrelate'                : 0.6
-                        }
 search_grid_options   = { 'penalty'     : ['elasticnet','l1','l2']
                         , 'solver'      : ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
                         , 'C'           : [20**(-1*i) for i in range(1,6)]
@@ -38,13 +35,13 @@ hyperparameter_values = { 'penalty'     : 'l2'
 #########################################
 
 
-def best_classifier():
+def best_classifier(tiers=5):
     return (classifier.set_params(hyperparameter_values))
 
 
 evaluation_parameters = { 'classifier_label'     : designation
                         , 'classifier'           : classifier
-                        , 'dataset_params'       : feature_extraction
+                        , 'dataset_params'       : default_feature_specification
                         , 'hyperspace_params'    : search_grid_options
                         , 'best_hyperparameters' : hyperparameter_values
                         }

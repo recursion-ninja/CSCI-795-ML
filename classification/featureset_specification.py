@@ -6,6 +6,12 @@ import functools         as f
 from sklearn.preprocessing import LabelBinarizer, QuantileTransformer
 
 
+default_feature_specification = { 'tagged_trait'               : True
+                                , 'standardized_label_classes' : 5
+                                , 'decorrelate'                : 0.6
+                                }
+
+
 def retreive_monster_dataset(compress=True, textual=False, tagged_damage=False, tagged_spell=False, tagged_trait=False, standardized_label_classes=None, decorrelate=None):
     absPath = p.Path(__file__).parent.resolve()
     dataset = pd.read_csv(absPath.parent.joinpath('data','dnd-5e-monsters.csv'), sep=',')
@@ -66,10 +72,8 @@ def decorrelate_columns(df, threshold=0.6):
                 
         proxies.remove(kept)
 
-        print(        "[*] Proxy   :", kept)
         for extra in proxies:
             if extra in df.columns:
-                print("[v] Dropping:", extra)
                 df.drop(extra, 1, inplace=True)
 
     return df

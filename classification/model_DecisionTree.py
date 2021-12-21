@@ -1,5 +1,6 @@
 from classifier_specification import STATIC_SEED, model_evaluation
-from sklearn.tree    import DecisionTreeClassifier
+from featureset_specification import default_feature_specification
+from sklearn.tree             import DecisionTreeClassifier
 
 
 #########################################
@@ -10,10 +11,6 @@ classifier  = DecisionTreeClassifier()
 
 designation = 'Decision Tree'
 
-feature_extraction    = { 'tagged_trait'               : True
-                        , 'standardized_label_classes' : 5
-                        , 'decorrelate'                : 0.6
-                        }
 hyperparameter_values = { 'criterion'    : 'gini'
                         , 'splitter'     : 'best'
                         , 'max_features' : 'log2'
@@ -31,13 +28,13 @@ search_grid_options   = { 'criterion'    : ['gini', 'entropy']
 #########################################
 
 
-def best_classifier():
+def best_classifier(tiers=5):
     return (classifier.set_params(hyperparameter_values))
 
 
 evaluation_parameters = { 'classifier_label'     : designation
                         , 'classifier'           : classifier
-                        , 'dataset_params'       : feature_extraction
+                        , 'dataset_params'       : default_feature_specification
                         , 'hyperspace_params'    : search_grid_options
                         , 'best_hyperparameters' : hyperparameter_values
                         }

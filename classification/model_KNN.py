@@ -1,5 +1,6 @@
-from classifier_specification   import STATIC_SEED, model_evaluation
-from sklearn.neighbors import KNeighborsClassifier
+from classifier_specification import STATIC_SEED, model_evaluation
+from featureset_specification import default_feature_specification
+from sklearn.neighbors        import KNeighborsClassifier
 
 
 #########################################
@@ -10,10 +11,6 @@ classifier  = KNeighborsClassifier()
 
 designation = 'K Nearest Neighbors'
 
-feature_extraction    = { 'tagged_trait'               : True
-                        , 'standardized_label_classes' : 5
-                        , 'decorrelate'                : 0.6
-                        }
 hyperparameter_values = { 'algorithm'   : 'ball_tree'
                         , 'weights'     : 'distance'
                         , 'n_neighbors' : 30
@@ -33,13 +30,13 @@ search_grid_options   = { 'n_neighbors' : list(range(1, 23, 2)) + list(range(23,
 #########################################
 
 
-def best_classifier():
+def best_classifier(tiers=5):
     return (classifier.set_params(hyperparameter_values))
 
 
 evaluation_parameters = { 'classifier_label'     : designation
                         , 'classifier'           : classifier
-                        , 'dataset_params'       : feature_extraction
+                        , 'dataset_params'       : default_feature_specification
                         , 'hyperspace_params'    : search_grid_options
                         , 'best_hyperparameters' : hyperparameter_values
                         }
