@@ -4,8 +4,8 @@ Used to compare results to see how different predictions are.
 Compares all predicted values for all classifiers, for visual reference.
 '''
 #Import the main dataset processing stuff
-import featureset_specification as datum
-
+import dataset_transforms as datum
+import model_selection as modsel
 #Import the models
 import model_KNN as KNN
 import model_SVM as SVM
@@ -25,7 +25,7 @@ def bulk_test_entries():
     mon_data = datum.retrieve_monster_dataset(tagged_trait = True)
     #Isolate the ELO column specifically.
     #ELO is on the last column.
-    X, Y = datum.seperate_data(monster_data)
+    X, Y = modsel.seperate_data(mon_data)
     
     #Get the optimal classifiers
     KNN_classifier = KNN.best_classifier()
