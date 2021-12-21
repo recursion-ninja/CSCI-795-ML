@@ -453,32 +453,32 @@ Consequently, we dropped the following features:
       We decided to try our luck with this model and see if an effective classifier could be built within a reasonable timeframe.
 
   2.  **K Nearest Neighbors**
-      A very simple model with a theoretical bound on it's maxium inaccuracy.
+      A very simple model with a theoretical bound on it's maximum inaccuracy.
       Because of our familiartiy with this model from the extensive discussion in class and it's prominent presence in our first homework, we chose this as our initial classifier to get our bearing and some quick benchmarking numbers.
 
   3.  **Logistic Regression**
       We read that the a logistic regression can be an effective and efficient model for multi-class output, which our tier list is.
       This model was included because we suspected that the features had some linear, but not polynomial, relationship(s).
-      The logistic regresion ought to capture and train well if linear relationships exists between the features and the tier list labels.
+      The logistic regression ought to capture and train well if linear relationships exists between the features and the tier list labels.
 
   4.  **Multinomial Naive Bayes**
-      Independant features are am important factor for the efficacy of Naive Bayes models.
-      Because we decorrelated our dataset, we felt that the remaining correlations beneath the `0.6` threshhold was small enought to not interfere with the model's performancce.
+      Independent features are am important factor for the efficacy of Naive Bayes models.
+      Because we decorrelated our dataset, we felt that the remaining correlations beneath the `0.6` threshold was small enough to not interfere with the model's performancce.
       Naive Bayes models are supposed to train well on small number of observations.
       Our dataset is just above the `1000` observation threshold, so we had high hopes that this model would train well.
       This was our second model used to get quick benchmarking numbers.
 
   5.  **Multi-layer Perceptron**
       We wanted to experiment with the concept of artificial neural nets.
-      The inclusion of this model allowed us to to get some experiance with an instance of the buzzword-worthy model.
+      The inclusion of this model allowed us to to get some experience with an instance of the buzzword-worthy model.
       Given the great flexibility of ANNs, we expected very good performance from this model.
 
   6.  **Random Forest**
       Given the unknown nature and limited domain knowledge that we could use to direct the machine learning process, the use of at least one ensamble learning technique seemed to be a prudent choice.
-      We slected the random forest model for it's ease of use and support of multi-output classes.
+      We selected the random forest model for it's ease of use and support of multi-output classes.
 
   7.  **Support Vector Machines**
-      The authors have a really solid theoretical understanding of how SVMs work so their inclusion was a natrual choice.
+      The authors have a really solid theoretical understanding of how SVMs work so their inclusion was a natural choice.
       Because we have multi-class output, a support vector classifier using the "One-versus-One" multiclass strategy strategy was used.
 
   8.  **X-Gradiant Boost**
@@ -490,7 +490,7 @@ Consequently, we dropped the following features:
 
 We take the prepared dataset and train multiple machine learning classifiers.
 We use 80% of the randomly permuted data as the training set and the remaining 20% as the test set.
-This parition data was stratified by the `'Elo Rank'` column to ensure that each tier is represented.
+This partition data was stratified by the `'Elo Rank'` column to ensure that each tier is represented.
 Furthermore, we partition the training set again, using 80% as a learning set and the remaining 20% as the validation set.
 
 > The dataset was paritioned according to the following distribution, stratified by `'Elo Rank'`:
@@ -502,4 +502,4 @@ Furthermore, we partition the training set again, using 80% as a learning set an
 | Learn    |  64%  |
 | Validate |  16%  |
 
-We then performed model selction
+We then performed model selection
