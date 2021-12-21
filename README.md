@@ -6,7 +6,7 @@
 
  - Alex Washburn (@recursion-ninja)
 
- - "John"  (@johnl11235)
+ - John Lee  (@johnl11235)
 
 ---
 
