@@ -505,3 +505,14 @@ Model selection was performed on the training set; comprised of the "learning" a
 
 
 ## Model Selection
+
+|        Model Name       | Executable File |
+|:------------------------|:----------------|
+| Decision Tree           | [`classification/model_DecisionTree.py`      ](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_DecisionTree.py      ) |
+| K Nearest Neighbors     | [`classification/model_KNN.py`               ](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_KNN.py               ) |
+| Logistic Regression     | [`classification/model_LogisticRegression.py`](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_LogisticRegression.py) |
+| Multinomial Naive Bayes | [`classification/model_NaiveBayes.py`        ](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_NaiveBayes.py        ) |
+| Multi-layer Perceptron  | [`classification/model_NeuralNetwork.py`     ](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_NeuralNetwork.py     ) |
+| Random Forest           | [`classification/model_RandomForest.py`      ](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_RandomForest.py      ) |
+| Support Vector Machines | [`classification/model_SVM.py`               ](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_SVM.py               ) |
+| X-Gradiant Boost        | [`classification/model_XGBoost.py`           ](https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_XGBoost.py           ) |

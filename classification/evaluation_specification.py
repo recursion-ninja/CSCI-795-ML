@@ -20,6 +20,7 @@ import model_XGBoost            as XGB
 def generate_all_evaluation_tables():
     
     for tier_size in TIERS_SET:
+        print("\n")
         param_list =    [  DT.tier_parameters(tier_size)
                         , KNN.tier_parameters(tier_size)
                         , LRG.tier_parameters(tier_size)
@@ -29,8 +30,10 @@ def generate_all_evaluation_tables():
                         , SVM.tier_parameters(tier_size)
                         , XGB.tier_parameters(tier_size)
                         ]
-        print( "Tier size:\t{}\n".format(tier_size) )
+        print( "Tier size:\t{}\n\n".format(tier_size) )
         generate_evaluation_table(param_list)
+
+    print("\n")
 
 
 def generate_evaluation_table(param_list):
@@ -59,7 +62,6 @@ def generate_evaluation_table(param_list):
     print(border_str)
     for params, result in eval_results:
         print( format_str.format( params[label_index], getDecimal(result, 'Precision'), getDecimal(result, 'Recall'), getDecimal(result, 'F1') ) )
-    print("\n")
 
 
 def getDecimal(d, k):

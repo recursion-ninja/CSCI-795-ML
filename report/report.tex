@@ -376,11 +376,23 @@ Validate & 16\% \\
 \hypertarget{model-selection}{%
 \subsection{Model Selection}\label{model-selection}}
 
+We performed model selection mainly by utilizing the \href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html}{\texttt{GridSearchCV}} function.
+For each model we considered the smallest multi-class ``tier list'' of \texttt{[0, 5]} and performed a ``wide and sparse search'' over the parameter space.
+Based on the results of this initial model selection, we then conducted a more dense hyperparameter search, centered about the results from the initial sparse search.
+This two pass approach proved quite effective both in terms of runtime efficiency and classifier efficacy.
+
+After model selection was complete for the multi-class label range \texttt{[0, 5]}, we applied the same hyperparameters to the larger ``tier lists'' with multi-class label ranges \texttt{[0, 10]} and \texttt{[0, 20]}.
+Unsurprisingly, since the models were not tuned for these larger multi-class labels ranges, their performance scores suffered significantly.
+We attempted to begin model selection for a the larger ranges, but this was not possible given the time constraints of the semester and our initial setbacks described below in the subsection \textbf{Challenges Faced}.
+The hyperparameters resulting from our model selection process can be found by referencing the executable file corresponding to the model listed in Table \ref{tab:hyperparameters}, and inspecting the definition of \texttt{hyperparameter\_values} within the file.
+
+
 \section{Evaluation}
 
 \section{Discussion}
 
 \subsection{Challenges Faced}
+\label{sec:challenges}
 
 \subsection{Lessons Learned}
 
@@ -802,6 +814,42 @@ Validate & 16\% \\
 \end{minipage}
 \end{scriptsize}
 
+\end{table}
+
+
+\begin{table}[!htbp] \centering 
+	\caption{ Hyperparameters for each model are defined by \texttt{hyperparameter\_values} in each file.}
+	\label{tab:hyperparameters}
+\begin{longtable}[]{@{}ll@{}}
+	\toprule
+	Model Name & Executable File \\
+	\midrule
+	\endhead
+	Decision Tree &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_DecisionTree.py}{\texttt{classification/model\_DecisionTree.py}
+	} \\
+	K Nearest Neighbors &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_KNN.py}{\texttt{classification/model\_KNN.py}
+	} \\
+	Logistic Regression &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_LogisticRegression.py}{\texttt{classification/model\_LogisticRegression.py}} \\
+	Multinomial Naive Bayes &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_NaiveBayes.py}{\texttt{classification/model\_NaiveBayes.py}
+	} \\
+	Multi-layer Perceptron &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_NeuralNetwork.py}{\texttt{classification/model\_NeuralNetwork.py}
+	} \\
+	Random Forest &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_RandomForest.py}{\texttt{classification/model\_RandomForest.py}
+	} \\
+	Support Vector Machines &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_SVM.py}{\texttt{classification/model\_SVM.py}
+	} \\
+	X-Gradiant Boost &
+	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_XGBoost.py}{\texttt{classification/model\_XGBoost.py}
+	} \\
+	\bottomrule
+\end{longtable}
 \end{table}
 
 

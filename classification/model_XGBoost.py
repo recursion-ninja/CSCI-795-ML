@@ -9,7 +9,7 @@ from copy                     import deepcopy
 #########################################
 
 
-class_count = 5
+class_count = 10
 
 classifier  = XGBClassifier()
 
@@ -29,12 +29,12 @@ hyperparameter_values = { 'objective'         : 'multi:softprob'
 search_grid_options   = { 'objective'         : [ 'multi:softprob' ]
                         , 'eval_metric'       : [ 'mlogloss' ]
                         , 'num_class'         : [ class_count ]
-                        , 'n_estimators'      : [   50, 100, 150, 200 ]
+                        , 'n_estimators'      : [   50, 100] #, 150, 200 ]
                         , 'use_label_encoder' : [ False ]
-                        , 'learning_rate'     : [ 0.01, 0.1, 0.2, 0.3 ]
-                        , 'max_depth'         : range(3, 10)
                         , 'colsample_bytree'  : [ i/10.0 for i in range(1, 3) ]
                         , 'gamma'             : [ i/10.0 for i in range(3) ]
+                        , 'learning_rate'     : [ 0.1, 0.2, 0.3 ] # [ 0.01, 0.1, 0.2, 0.3 ]
+                        , 'max_depth'         : range(3, 6) # range(3, 10)
                         , 'random_state'      : [STATIC_SEED]
                         }
 
@@ -48,7 +48,7 @@ evaluation_parameters = { 'classifier_label'     : designation
                         , 'classifier'           : classifier
                         , 'dataset_params'       : default_feature_specification
                         , 'hyperspace_params'    : search_grid_options
-                        , 'best_hyperparameters' : hyperparameter_values
+                        , 'best_hyperparameters' : None # hyperparameter_values
                         }
 t_05 = deepcopy(evaluation_parameters)
 t_10 = deepcopy(evaluation_parameters)
