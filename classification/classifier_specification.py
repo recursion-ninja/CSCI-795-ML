@@ -92,7 +92,7 @@ def model_evaluation(classifier_label, classifier, dataset_params, final_evaluat
     if verbose:
         print("Generated predictions for evaluation\n")
         describe_data_set(X_test, "  Using " + label_prediction  + " dataset containing:")
-    return evaluate_predictions(Y_eval, Y_score, verbose)
+    return evaluate_predictions(Y_eval, Y_score, dataset_params['standardized_label_classes'], verbose)
 
 
 # Given a Pandas data frame, partition the data frame into two segements.
@@ -163,24 +163,25 @@ def describe_data_set(X, label):
     print("")
 
 
-def evaluate_predictions(Y_eval, Y_score, verbose=True):
+def evaluate_predictions(Y_eval, Y_score, num_classes, verbose=True):
     result =    { 'Accuracy'       : round(metrics.accuracy_score(     Y_eval, Y_score                    ), 4)
-                , 'F1'             : round(metrics.f1_score(           Y_eval, Y_score, average='weighted'), 4)
-                , 'Recall'         : round(metrics.recall_score(       Y_eval, Y_score, average='weighted'), 4)
                 , 'Precision'      : round(metrics.precision_score(    Y_eval, Y_score, average='weighted'), 4)
+                , 'Recall'         : round(metrics.recall_score(       Y_eval, Y_score, average='weighted'), 4)
+                , 'F1'             : round(metrics.f1_score(           Y_eval, Y_score, average='weighted'), 4)
 #                , 'LRAP'           : round(metrics.label_ranking_average_precision_score(Y_eval, Y_score  ), 4)
-                , 'Converge Error' : round(metrics.coverage_error(     Y_eval, Y_score                    ), 4)
-                , 'Ranking Loss'   : round(metrics.label_ranking_loss( Y_eval, Y_score                    ), 4)
-#                , 'ROC AUC'   : round(metrics.roc_auc_score(  Y_eval, Y_score, average='weighted', multi_class='ovo'), 4)
+#                , 'Converge Error' : round(metrics.coverage_error(     Y_eval, Y_score                    ), 4)
+#                , 'Ranking Loss'   : round(metrics.label_ranking_loss( Y_eval, Y_score                    ), 4)
+#                , 'ROC AUC'   : round(metrics.roc_auc_score(  Y_eval, Y_score, average='weighted', multi_class='ovo', labels=list(range(0,num_classes))), 4)
                 }
 
     if verbose:
         inspect_confusion_matrix(Y_eval, Y_score)
         print("")
+        print("  Accuracy Score: ", result['Accuracy' ])
         print("  Precision Score:", result['Precision'])
         print("  Recall Score:   ", result['Recall'   ])
         print("  F1 Score:       ", result['F1'       ])
-#        print("  ROC AUC Score:  ", result['ROC AUC'  ])
+        print("  ROC AUC Score:  ", result['ROC AUC'  ])
         print("")
 
     return result
