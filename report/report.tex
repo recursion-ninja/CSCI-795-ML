@@ -1,0 +1,733 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+
+\documentclass[12pt]{diazessay}
+
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{bashful}
+\usepackage{calc}
+\usepackage{etoolbox}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{longtable}
+\usepackage[]{microtype}
+\usepackage{parskip}
+\usepackage{textcomp}
+\usepackage{upquote}
+\usepackage{xcolor}
+\usepackage{xurl}
+
+%\makesavenoteenv{longtable}
+\UseMicrotypeSet[protrusion]{basicmath}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen}
+
+%--------------------
+%	TITLE SECTION
+%--------------------
+%\vspace*{-2.25cm}
+\title{\texttt{\LARGE{Classifying Creature Combat Capability in \\Dungeons and Dragons 5th Edition} \\\vspace{-0.35cm} {\large A Hunter College CSCI-795 Project Proposal}\\\normalsize\url{https://github.com/recursion-ninja/CSCI-795-ML}}} % Title and subtitle
+
+\author{\texttt{{\Huge Team:}\\\vspace*{-0.5em}
+		John Lee \\\vspace*{-0.5em}
+		Alex Washburn}} % Author and institution
+
+\date{\texttt{\today}} % Date, use \date{} for no date
+
+\pagestyle{empty}
+
+%--------------------
+
+\begin{document}
+	
+\maketitle % Print the title section
+	
+\vspace{4cm}
+\section*{Abstract}
+
+
+In this project, we explore an under-developed aspect of Dungeons and
+Dragons 5th Edition (D\&D), the monster "Challenge Rating" system. The
+Challenge Rating (CR) is a measure of a monster's lethality against a
+party of \emph{four} characters, each that a character level equal to
+the monster's CR. Unfortunately, the supplied CR values that have been
+published are more often than not poor estimates of monster lethality.
+In this project, we attempt to produce an substitute ranking of monster
+lethality, ordering them into tiers of either \texttt{{[}1,\ 5{]}},
+\texttt{{[}1,\ 10{]}}, or \texttt{{[}1,\ 20{]}}. We hypothesize that the
+application of machine learning will produce a better indicator of
+monster lethality than the supplied CR score.
+
+\pagebreak
+
+\hypertarget{the-dd-monster-data}{%
+\section*{The D\&D Monster Data}\label{the-dd-monster-data}}
+
+We take the stat-block of each monster from the
+\href{https://5etools-mirror-1.github.io/}{\texttt{5e.tools}} database
+and match the monster with the
+\href{https://en.wikipedia.org/wiki/Elo_rating_system}{Elo Ranking} from
+\href{https://www.dndcombat.com/dndcombat/Welcome.do?page=Compendium}{\texttt{dndcombat.com}}.
+Elo Ranks scores on
+\href{https://www.dndcombat.com/dndcombat/Welcome.do?page=Compendium}{\texttt{dndcombat.com}}
+are continually updated. The Elo observations were taken on
+\texttt{2021-12-08}.
+
+The raw data used for this project has been stored within the repository
+for reference:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://github.com/recursion-ninja/CSCI-795-ML/tree/main/data/5e.tools}{\texttt{data/5e.tools/*}
+  }
+\item
+  \href{https://github.com/recursion-ninja/CSCI-795-ML/tree/main/data/dndcombat.com}{\texttt{data/dndcombat.com/*}}
+\end{itemize}
+
+Both the data from
+\href{https://5etools-mirror-1.github.io/}{\texttt{5e.tools}} and
+\href{https://www.dndcombat.com/dndcombat/Welcome.do?page=Compendium}{\texttt{dndcombat.com}}
+were retrieved in \href{https://en.wikipedia.org/wiki/JSON}{JSON
+format}. The data was parsed and curated using a custom tool written by
+the authors. The tool is named \texttt{curate-json} and is written in
+\href{https://www.haskell.org/}{Haskell}. In order to build the
+\texttt{curate-json} tool, the \href{https://www.haskell.org/}{Haskell}
+compiler \href{https://www.haskell.org/ghc/download.html}{GHC} and build
+tool \href{https://www.haskell.org/cabal/download.html}{\texttt{cabal}}
+are required.
+
+The source code for the \texttt{curate-json} tool has been stored within
+the repository for reference:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://github.com/recursion-ninja/CSCI-795-ML/tree/main/curation}{\texttt{curation/*}}
+\end{itemize}
+
+Additionally, there is a
+\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/curate-dataset.sh}{\texttt{curate-dataset.sh}}
+script in the root of the repository which, assuming both
+\href{https://www.haskell.org/ghc/download.html}{GHC} and
+\href{https://www.haskell.org/cabal/download.html}{\texttt{cabal}} are
+installed, will replicate the data curation used for this project. The
+\texttt{curate-dataset.sh} script will place the curated dataset in the
+\texttt{data} directory.
+
+The curated data used for this project has been stored within the
+repository for reference:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/data/dnd-5e-monsters.csv}{\texttt{data/dnd-5e-monsters.csv}}
+\end{itemize}
+
+\hypertarget{feature-extraction--selection}{%
+\section{Feature Extraction \&
+Selection}\label{feature-extraction--selection}}
+
+The curated
+\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/data/dnd-5e-monsters.csv}{\texttt{dnd-5e-monsters.csv}}
+dataset has \texttt{1386} rows and \texttt{72} columns, constituting the
+project's initial observations and measurements, respectively. There are
+two leading textual columns, labeled
+\texttt{\textquotesingle{}Name\textquotesingle{}} and
+\texttt{\textquotesingle{}Type\textquotesingle{}} indexed
+\texttt{{[}0,\ 1{]}}. The subsequent \texttt{20} columns indexed
+\texttt{{[}2,\ 21{]}} are "continuous," integral-valued measurements of
+common D\&D attributes. The final
+\texttt{\textquotesingle{}Elo\ Rank\textquotesingle{}} column indexed
+\texttt{71} is the label for supervised machine learning models. The
+next three trailing columns, labeled \texttt{Damage\ Tags},
+\texttt{Spellcasting\ Tags} and \texttt{Trait\ Tags} indexed
+\texttt{{[}66,\ 70{]}} The remaining columns indexed
+\texttt{{[}22,\ 67{]}} are binary indicators for various monster
+attributes. A column summary of the initial data set is presented in Table \ref{tab:initial-dataset}.
+
+
+
+For our analysis, we desire the
+\texttt{\textquotesingle{}Elo\ Rank\textquotesingle{}} to be represented
+as an integral "tier list." We extract the tier list feature by
+discretizing the the 'Elo Rank' column via following procedure:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Normalize the data into normally distributed quantiles via the
+  \texttt{QuantileTransformer}.
+\item
+  Decide on the number of tiers: \texttt{{[}1,\ 5{]}},
+  \texttt{{[}1,\ 10{]}}, or \texttt{{[}1,\ 20{]}}.
+\item
+  Scale the data to fit the tier range.
+\item
+  Remove outliers.
+\item
+  Round values to nearest integer value.
+\end{enumerate}
+
+\begin{table}[!htbp] \centering 
+	\caption{The removal of outliers will shrink the dataset depending on tier list size}
+	\label{tab:shrunk-observations}
+\begin{longtable}[]{@{}rc@{}}
+\toprule
+Tier List & Observations \\
+\midrule
+\endhead
+\texttt{{[}1,\ \ 5{]}} & \texttt{1200} \\
+\texttt{{[}1,\ 10{]}} & \texttt{1316} \\
+\texttt{{[}1,\ 20{]}} & \texttt{1348} \\
+\bottomrule
+\end{longtable}
+\end{table}
+
+The final feature extraction involves the last three columns, labeled
+\texttt{Damage\ Tags}, \texttt{Spellcasting\ Tags} and
+\texttt{Trait\ Tags} indexed \texttt{{[}63,\ 65{]}}. Each can be
+expanded to extract an additional features, totaling \texttt{63}
+features combined. This feature extraction nearly doubles the fully
+expanded dataset size, now totaling to \texttt{135} features.
+The fully extracted dataset is presented in Table \ref{tab:fully-extracted-dataset}.
+
+\begin{quote}
+{\itshape After extracting all possible features we perform feature selection.}
+\end{quote}
+
+First, the textual columns, labeled
+\texttt{\textquotesingle{}Name\textquotesingle{}} and
+\texttt{\textquotesingle{}Type\textquotesingle{}} indexed
+\texttt{{[}0,\ 1{]}} are dropped from our analysis. These columns do not
+influence combat efficacy and are not convertible to a meaningful
+numeric representation. Their absence makes the machine learning process
+much smoother.
+
+Second, we drop all features extracted from the 'Damage Tag' and 'Spell
+Tag' columns. These extracted features had essentially no bearing on our
+first explored model (Multinomial Naive Bayes), and hence we decided to
+omit them from all future models for efficiency reasons.
+
+For the final component of our feature selection process, we perform a "decorrelation" pass through the feature set.
+If any pair of features have a correlation coefficient of \texttt{0.6} or higher, we drop one of the columns and use the other as a proxy.
+Consequently, we dropped the
+features in Table \ref{tab:dropped-features}.
+After feature extraction \emph{and} feature selection, our dataset was comprised of \texttt{96} features.
+See Table \ref{tab:final-dataset} for the final feature set we used for our machine learning models.
+
+
+\hypertarget{datset-partitioning}{%
+\section{Datset partitioning}\label{datset-partitioning}}
+
+We take the prepared dataset and train multiple machine learning
+classifiers. We use 80\% of the randomly permuted data as the training
+set and the remaining 20\% as the test set. This partition data was
+stratified by the \texttt{\textquotesingle{}Elo\ Rank\textquotesingle{}}
+column to ensure that each tier is represented. Furthermore, we
+partition the training set again, using 80\% as a learning set and the
+remaining 20\% as the validation set. Model selection was performed on
+the training set; comprised of the "learning" and validation subsets.
+
+\begin{table}[!htbp] \centering 
+	\caption{Distribution for partitioning dataset,
+		stratified by \texttt{\textquotesingle{}Elo\ Rank\textquotesingle{}}}
+	\label{tab:shrunk-observations}
+\begin{longtable}[]{@{}cr@{}}
+\toprule
+Set & Ratio \\
+\midrule
+\endhead
+Test & 20\% \\
+Train & 80\% \\
+Learn & 64\% \\
+Validate & 16\% \\
+\bottomrule
+\end{longtable}
+\end{table}
+
+\hypertarget{model-specification}{%
+\section{Model Specification}\label{model-specification}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Decision Tree:} Decision trees make extremely fast classifiers
+  once constructed, but can be incredibly time consuming to build.
+  We decided to try our luck with this model and see if an effective
+  classifier could be built within a reasonable time frame.
+\item
+  \textbf{K Nearest Neighbors:} A very simple model with a theoretical bound on it's maximum inaccuracy.
+  Because of our familiarity with this model from the extensive discussion in class and it's prominent presence in our first homework, we chose this as our initial classifier to get our bearing and some quick benchmarking numbers.
+\item
+  \textbf{Logistic Regression:} We read that the a logistic regression
+  can be an effective and efficient model for multi-class output, which
+  our tier list is. This model was included because we suspected that
+  the features had some linear, but not polynomial, relationship(s). The
+  logistic regression ought to capture and train well if linear
+  relationships exists between the features and the tier list labels.
+\item
+  \textbf{Multinomial Naive Bayes:} Independent features are am important
+  factor for the efficacy of Naive Bayes models. Because we decorrelated
+  our dataset, we felt that the remaining correlations beneath the
+  \texttt{0.6} threshold was small enough to not interfere with the
+  model's performance. Naive Bayes models are supposed to train well on
+  small number of observations. Our dataset is just above the
+  \texttt{1000} observation threshold, so we had high hopes that this
+  model would train well. This was our second model used to get quick
+  benchmarking numbers.
+\item
+  \textbf{Multi-layer Perceptron:} We wanted to experiment with the
+  concept of artificial neural nets. The inclusion of this model allowed
+  us to to get some experience with an instance of the buzzword-worthy
+  model. Given the great flexibility of ANNs, we expected very good
+  performance from this model.
+\item
+  \textbf{Random Forest:} Given the unknown nature and limited domain
+  knowledge that we could use to direct the machine learning process,
+  the use of at least one ensemble learning technique seemed to be a
+  prudent choice. We selected the random forest model for it's ease of
+  use and support of multi-output classes.
+\item
+  \textbf{Support Vector Machines:} The authors have a really solid
+  theoretical understanding of how SVMs work so their inclusion was a
+  natural choice. Because we have multi-class output, a support vector
+  classifier using the "One-versus-One" multi-class strategy strategy was
+  used.
+\item
+  \textbf{X-Gradient Boost:} With the guidance of our professor Anita
+  Raja, we were directed to experiment with \texttt{XGBoost} as a
+  possibly effective ensemble learning technique which might out perform
+  the random forest. This is the model we had the least knowledge of,
+  but it served as a great learning opportunity, both from a technical
+  and theoretic perspective.
+\end{enumerate}
+
+\hypertarget{model-selection}{%
+\section{Model Selection}\label{model-selection}}
+
+\clearpage
+
+\bibliographystyle{ieee}
+\bibliography{report}
+
+\clearpage
+
+\section{Appendix}
+
+
+\begin{table}[!htbp] \centering 
+	\caption{\bfseries Initial Dataset} 
+	\label{tab:initial-dataset}
+
+\begin{footnotesize}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{longtable}[]{@{}rll@{}}
+	\toprule
+	\# & Column Label & Data Type \\
+	\midrule
+	\endhead
+	0 & Name & Textual \\
+	1 & Type & Textual \\
+	2 & Size & Integral \\
+	3 & Armor & Integral \\
+	4 & Hit Points & Integral \\
+	5 & Move Burrow & Integral \\
+	6 & Move Climb & Integral \\
+	7 & Move Fly & Integral \\
+	8 & Move Swim & Integral \\
+	9 & Move Walk & Integral \\
+	10 & Stat Str & Integral \\
+	11 & Stat Dex & Integral \\
+	12 & Stat Con & Integral \\
+	13 & Stat Int & Integral \\
+	14 & Stat Wis & Integral \\
+	15 & Stat Cha & Integral \\
+	16 & Save Str & Integral \\
+	17 & Save Dex & Integral \\
+	18 & Save Con & Integral \\
+	19 & Save Int & Integral \\
+	20 & Save Wis & Integral \\
+	21 & Save Cha & Integral \\
+	22 & Blind Sight & Binary \\
+	23 & Dark Vision & Binary \\
+	24 & Tremorsense & Binary \\
+	25 & True Sight & Binary \\
+	26 & Immune Acid & Binary \\
+	27 & Immune Bludgeoning & Binary \\
+	28 & Immune Cold & Binary \\
+	29 & Immune Fire & Binary \\
+	30 & Immune Force & Binary \\
+	31 & Immune Lightning & Binary \\
+	32 & Immune Necrotic & Binary \\
+	33 & Immune Piercing & Binary \\
+	34 & Immune Poison & Binary \\
+	35 & Immune Psychic & Binary \\
+	\bottomrule
+\end{longtable}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{longtable}{@{}rll@{}}
+	\toprule
+	\# & Column Label & Data Type \\
+	\midrule
+	\endhead
+	36 & Immune Radiant & Binary \\
+	37 & Immune Slashing & Binary \\
+	38 & Immune Thunder & Binary \\
+	39 & Resist Acid & Binary \\
+	40 & Resist Bludgeoning & Binary \\
+	41 & Resist Cold & Binary \\
+	42 & Resist Fire & Binary \\
+	43 & Resist Force & Binary \\
+	44 & Resist Lightning & Binary \\
+	45 & Resist Necrotic & Binary \\
+	46 & Resist Piercing & Binary \\
+	47 & Resist Poison & Binary \\
+	48 & Resist Psychic & Binary \\
+	49 & Resist Radiant & Binary \\
+	50 & Resist Slashing & Binary \\
+	51 & Resist Thunder & Binary \\
+	52 & Cause Blinded & Binary \\
+	53 & Cause Charmed & Binary \\
+	54 & Cause Deafened & Binary \\
+	55 & Cause Frightened & Binary \\
+	56 & Cause Grappled & Binary \\
+	57 & Cause Incapacitated & Binary \\
+	58 & Cause Invisible & Binary \\
+	59 & Cause Paralyzed & Binary \\
+	60 & Cause Petrified & Binary \\
+	61 & Cause Poisoned & Binary \\
+	62 & Cause Prone & Binary \\
+	63 & Cause Restrained & Binary \\
+	64 & Cause Stunned & Binary \\
+	65 & Cause Unconscious & Binary \\
+	66 & Multiattack & Binary \\
+	67 & Spellcasting & Binary \\
+	68 & Damage Tags & Textual \\
+	69 & Spellcasting Tags & Textual \\
+	70 & Trait Tags & Textual \\
+	71 & Elo Rank & Integral \\
+	\bottomrule
+\end{longtable}
+\end{minipage}
+\end{footnotesize}
+
+\end{table}
+
+\begin{table}[ht]
+	\caption{\bfseries Fully Extracted Dataset}
+	\label{tab:fully-extracted-dataset}
+\begin{tiny}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{tabular}{@{}rll@{}}
+	\toprule
+	\# & Column Label & Data Type \\
+	\midrule
+	0 & Name & Textual \\
+	1 & Type & Textual \\
+	2 & Size & Integral \\
+	3 & Armor & Integral \\
+	4 & Hit Points & Integral \\
+	5 & Move Burrow & Integral \\
+	6 & Move Climb & Integral \\
+	7 & Move Fly & Integral \\
+	8 & Move Swim & Integral \\
+	9 & Move Walk & Integral \\
+	10 & Stat Str & Integral \\
+	11 & Stat Dex & Integral \\
+	12 & Stat Con & Integral \\
+	13 & Stat Int & Integral \\
+	14 & Stat Wis & Integral \\
+	15 & Stat Cha & Integral \\
+	16 & Save Str & Integral \\
+	17 & Save Dex & Integral \\
+	18 & Save Con & Integral \\
+	19 & Save Int & Integral \\
+	20 & Save Wis & Integral \\
+	21 & Save Cha & Integral \\
+	22 & Blind Sight & Binary \\
+	23 & Dark Vision & Binary \\
+	24 & Tremorsense & Binary \\
+	25 & True Sight & Binary \\
+	26 & Immune Acid & Binary \\
+	27 & Immune Bludgeoning & Binary \\
+	28 & Immune Cold & Binary \\
+	29 & Immune Fire & Binary \\
+	30 & Immune Force & Binary \\
+	31 & Immune Lightning & Binary \\
+	32 & Immune Necrotic & Binary \\
+	33 & Immune Piercing & Binary \\
+	34 & Immune Poison & Binary \\
+	35 & Immune Psychic & Binary \\
+	36 & Immune Radiant & Binary \\
+	37 & Immune Slashing & Binary \\
+	38 & Immune Thunder & Binary \\
+	39 & Resist Acid & Binary \\
+	40 & Resist Bludgeoning & Binary \\
+	41 & Resist Cold & Binary \\
+	42 & Resist Fire & Binary \\
+	43 & Resist Force & Binary \\
+	44 & Resist Lightning & Binary \\
+	45 & Resist Necrotic & Binary \\
+	46 & Resist Piercing & Binary \\
+	47 & Resist Poison & Binary \\
+	48 & Resist Psychic & Binary \\
+	49 & Resist Radiant & Binary \\
+	50 & Resist Slashing & Binary \\
+	51 & Resist Thunder & Binary \\
+	52 & Cause Blinded & Binary \\
+	53 & Cause Charmed & Binary \\
+	54 & Cause Deafened & Binary \\
+	55 & Cause Frightened & Binary \\
+	56 & Cause Grappled & Binary \\
+	57 & Cause Incapacitated & Binary \\
+	58 & Cause Invisible & Binary \\
+	59 & Cause Paralyzed & Binary \\
+	60 & Cause Petrified & Binary \\
+	61 & Cause Poisoned & Binary \\
+	62 & Cause Prone & Binary \\
+	63 & Cause Restrained & Binary \\
+	64 & Cause Stunned & Binary \\
+	65 & Cause Unconscious & Binary \\
+	66 & Multiattack & Binary \\
+	67 & Spellcasting & Binary \\
+	\bottomrule
+\end{tabular}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{tabular}{@{}rll@{}}
+	\toprule
+	\# & Column Label & Data Type \\
+	\midrule
+	68 & Damage\_A & Binary \\
+	69 & Damage\_B & Binary \\
+	70 & Damage\_C & Binary \\
+	71 & Damage\_F & Binary \\
+	72 & Damage\_I & Binary \\
+	73 & Damage\_L & Binary \\
+	74 & Damage\_N & Binary \\
+	75 & Damage\_O & Binary \\
+	76 & Damage\_P & Binary \\
+	77 & Damage\_R & Binary \\
+	78 & Damage\_S & Binary \\
+	79 & Damage\_T & Binary \\
+	80 & Damage\_Y & Binary \\
+	81 & Spellcasting\_CA & Binary \\
+	82 & Spellcasting\_CB & Binary \\
+	83 & Spellcasting\_CC & Binary \\
+	84 & Spellcasting\_CD & Binary \\
+	85 & Spellcasting\_CL & Binary \\
+	86 & Spellcasting\_CP & Binary \\
+	87 & Spellcasting\_CR & Binary \\
+	88 & Spellcasting\_CS & Binary \\
+	89 & Spellcasting\_CW & Binary \\
+	90 & Spellcasting\_F & Binary \\
+	91 & Spellcasting\_I & Binary \\
+	92 & Spellcasting\_P & Binary \\
+	93 & Spellcasting\_S & Binary \\
+	94 & Aggressive & Binary \\
+	95 & Ambusher & Binary \\
+	96 & Amorphous & Binary \\
+	97 & Amphibious & Binary \\
+	98 & Antimagic Susceptibility & Binary \\
+	99 & Brute & Binary \\
+	100 & Charge & Binary \\
+	101 & Damage Absorption & Binary \\
+	102 & Death Burst & Binary \\
+	103 & Devil's Sight & Binary \\
+	104 & False Appearance & Binary \\
+	105 & Fey Ancestry & Binary \\
+	106 & Flyby & Binary \\
+	107 & Hold Breath & Binary \\
+	108 & Illumination & Binary \\
+	109 & Immutable Form & Binary \\
+	110 & Incorporeal Movement & Binary \\
+	111 & Keen Senses & Binary \\
+	112 & Legendary Resistances & Binary \\
+	113 & Light Sensitivity & Binary \\
+	114 & Magic Resistance & Binary \\
+	115 & Magic Weapons & Binary \\
+	116 & Pack Tactics & Binary \\
+	117 & Pounce & Binary \\
+	118 & Rampage & Binary \\
+	119 & Reckless & Binary \\
+	120 & Regeneration & Binary \\
+	121 & Rejuvenation & Binary \\
+	122 & Shapechanger & Binary \\
+	123 & Siege Monster & Binary \\
+	124 & Sneak Attack & Binary \\
+	125 & Spell Immunity & Binary \\
+	126 & Spider Climb & Binary \\
+	127 & Sunlight Sensitivity & Binary \\
+	128 & Turn Immunity & Binary \\
+	129 & Turn Resistance & Binary \\
+	130 & Undead Fortitude & Binary \\
+	131 & Water Breathing & Binary \\
+	132 & Web Sense & Binary \\
+	133 & Web Walker & Binary \\
+	134 & Elo Rank & Integral \\
+	\bottomrule
+\end{tabular}
+\end{minipage}
+\end{tiny}
+
+\end{table}
+
+\begin{table}[!htbp] \centering 
+	\caption{Dropped highly correlated features and their proxy}
+	\label{tab:dropped-features}
+	
+\begin{longtable}[]{@{}ll@{}}
+	\toprule
+	Proxy & Dropped Feature \\
+	\midrule
+	\endhead
+	Hit Points & Size \\
+	Hit Points & Stat Str \\
+	Hit Points & Stat Con \\
+	Stat Cha & Stat Int \\
+	Resist Fire & Resist Cold \\
+	Resist Fire & Resist Lightning \\
+	Resist Acid & Resist Thunder \\
+	Resist Acid & Incorporeal Movement \\
+	Damage Absorption & Immutable Form \\
+	Spell Immunity & Immune Force \\
+	Web Sense & Web Walker \\
+	\bottomrule
+\end{longtable}
+
+\end{table}
+
+
+\begin{table}[!htbp] \centering 
+	\caption{\bfseries Final Dataset}
+	\label{tab:final-dataset}
+\begin{scriptsize}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{longtable}[]{@{}rll@{}}
+	\toprule
+	\# & Column Label & Data Type \\
+	\midrule
+	\endhead
+	0 & Armor & Integral \\
+	1 & Hit Points & Integral \\
+	2 & Move Burrow & Integral \\
+	3 & Move Climb & Integral \\
+	4 & Move Fly & Integral \\
+	5 & Move Swim & Integral \\
+	6 & Move Walk & Integral \\
+	7 & Stat Dex & Integral \\
+	8 & Stat Wis & Integral \\
+	9 & Stat Cha & Integral \\
+	10 & Save Str & Integral \\
+	11 & Save Dex & Integral \\
+	12 & Save Con & Integral \\
+	13 & Save Int & Integral \\
+	14 & Save Wis & Integral \\
+	15 & Save Cha & Integral \\
+	16 & Blind Sight & Binary \\
+	17 & Dark Vision & Binary \\
+	18 & Tremorsense & Binary \\
+	19 & True Sight & Binary \\
+	20 & Immune Acid & Binary \\
+	21 & Immune Bludgeoning & Binary \\
+	22 & Immune Cold & Binary \\
+	23 & Immune Fire & Binary \\
+	24 & Immune Lightning & Binary \\
+	25 & Immune Necrotic & Binary \\
+	26 & Immune Piercing & Binary \\
+	27 & Immune Poison & Binary \\
+	28 & Immune Psychic & Binary \\
+	29 & Immune Radiant & Binary \\
+	30 & Immune Slashing & Binary \\
+	31 & Immune Thunder & Binary \\
+	32 & Resist Bludgeoning & Binary \\
+	33 & Resist Cold & Binary \\
+	34 & Resist Force & Binary \\
+	35 & Resist Necrotic & Binary \\
+	36 & Resist Piercing & Binary \\
+	37 & Resist Poison & Binary \\
+	38 & Resist Psychic & Binary \\
+	39 & Resist Radiant & Binary \\
+	40 & Resist Slashing & Binary \\
+	41 & Cause Blinded & Binary \\
+	42 & Cause Charmed & Binary \\
+	43 & Cause Deafened & Binary \\
+	44 & Cause Frightened & Binary \\
+	45 & Cause Grappled & Binary \\
+	46 & Cause Incapacitated & Binary \\
+	47 & Cause Invisible & Binary \\
+	\bottomrule
+\end{longtable}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{longtable}{@{}rll@{}}
+	\toprule
+	\# & Column Label & Data Type \\
+	\midrule
+	\endhead
+	48 & Cause Paralyzed & Binary \\
+	49 & Cause Petrified & Binary \\
+	50 & Cause Poisoned & Binary \\
+	51 & Cause Prone & Binary \\
+	52 & Cause Restrained & Binary \\
+	53 & Cause Stunned & Binary \\
+	54 & Cause Unconscious & Binary \\
+	55 & Multiattack & Binary \\
+	56 & Spellcasting & Binary \\
+	57 & Aggressive & Binary \\
+	58 & Ambusher & Binary \\
+	59 & Amorphous & Binary \\
+	60 & Amphibious & Binary \\
+	61 & Antimagic Susceptibility & Binary \\
+	62 & Brute & Binary \\
+	63 & Charge & Binary \\
+	64 & Death Burst & Binary \\
+	65 & Devil's Sight & Binary \\
+	66 & False Appearance & Binary \\
+	67 & Fey Ancestry & Binary \\
+	68 & Flyby & Binary \\
+	69 & Hold Breath & Binary \\
+	70 & Illumination & Binary \\
+	71 & Immutable Form & Binary \\
+	72 & Incorporeal Movement & Binary \\
+	73 & Keen Senses & Binary \\
+	74 & Legendary Resistances & Binary \\
+	75 & Light Sensitivity & Binary \\
+	76 & Magic Resistance & Binary \\
+	77 & Magic Weapons & Binary \\
+	78 & Pack Tactics & Binary \\
+	79 & Pounce & Binary \\
+	80 & Rampage & Binary \\
+	81 & Reckless & Binary \\
+	82 & Regeneration & Binary \\
+	83 & Rejuvenation & Binary \\
+	84 & Shapechanger & Binary \\
+	85 & Siege Monster & Binary \\
+	86 & Sneak Attack & Binary \\
+	87 & Spell Immunity & Binary \\
+	88 & Spider Climb & Binary \\
+	89 & Sunlight Sensitivity & Binary \\
+	90 & Turn Immunity & Binary \\
+	91 & Turn Resistance & Binary \\
+	92 & Undead Fortitude & Binary \\
+	93 & Water Breathing & Binary \\
+	94 & Web Walker & Binary \\
+	95 & Elo Rank & Integral \\
+	\bottomrule
+\end{longtable}
+\end{minipage}
+\end{scriptsize}
+
+\end{table}
+
+
+\end{document}
