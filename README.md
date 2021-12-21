@@ -162,7 +162,7 @@ We extract the tier list feature by discretizing the the 'Elo Rank' column via f
 
   5. Round values to nearest integer value.
 
-***Note:** The removal of outliers will shink the dataset as follows:
+> **Note:** The removal of outliers will shink the dataset as follows:
 
 | Tier List | Observations |
 |----------:|:------------:|
