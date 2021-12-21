@@ -30,10 +30,10 @@
 %	TITLE SECTION
 %--------------------
 %\vspace*{-2.25cm}
-\title{\texttt{\LARGE{Classifying Creature Combat Capability in \\Dungeons and Dragons 5th Edition} \\\vspace{-0.35cm} {\large A Hunter College CSCI-795 Project Proposal}\\\normalsize\url{https://github.com/recursion-ninja/CSCI-795-ML}}} % Title and subtitle
+\title{\texttt{\LARGE{Classifying Creature Combat Capability in \\Dungeons and Dragons 5th Edition} \\\vspace{1em} {\large A Hunter College CSCI-795 Project Proposal}}} % Title and subtitle
 
 \author{\texttt{{\Huge Team:}\\\vspace*{-0.5em}
-		John Lee \\\vspace*{-0.5em}
+		John Lee \\\vspace*{-0.25em}
 		Alex Washburn}} % Author and institution
 
 \date{\texttt{\today}} % Date, use \date{} for no date
@@ -44,11 +44,43 @@
 
 \begin{document}
 	
-\maketitle % Print the title section
-	
-\vspace{4cm}
-\section*{Abstract}
 
+\maketitle % Print the title section
+
+	
+\pagebreak
+
+
+\clearpage
+
+
+\vspace*{\fill}
+\begin{center}
+	\begin{minipage}{.75\textwidth}
+		
+\tableofcontents
+\vspace*{0.5cm}
+\begin{longtable}[]{@{}lc@{}}
+{\bfseries GitHub} & \url{https://github.com/recursion-ninja/CSCI-795-ML} \\
+& \\
+{\bfseries Video } & \url{https://github.com/recursion-ninja/CSCI-795-ML} \\
+\end{longtable}
+		
+	\end{minipage}
+\end{center}
+\vfill % equivalent to \vspace{\fill}
+\clearpage
+
+
+\pagebreak
+
+
+\clearpage
+\vspace*{\fill}
+\begin{center}
+	\begin{minipage}{.9\textwidth}
+\hypertarget{abstract}{%
+\section{Abstract}\label{abstract}}
 
 In this project, we explore an under-developed aspect of Dungeons and
 Dragons 5th Edition (D\&D), the monster "Challenge Rating" system. The
@@ -61,11 +93,20 @@ lethality, ordering them into tiers of either \texttt{{[}1,\ 5{]}},
 \texttt{{[}1,\ 10{]}}, or \texttt{{[}1,\ 20{]}}. We hypothesize that the
 application of machine learning will produce a better indicator of
 monster lethality than the supplied CR score.
-
+	\end{minipage}
+\end{center}
+\vfill % equivalent to \vspace{\fill}
+\clearpage
 \pagebreak
 
+\section{Team Member Roles}
+
+\section{State-of-the-art}
+
+\section{Approach}
+
 \hypertarget{the-dd-monster-data}{%
-\section*{The D\&D Monster Data}\label{the-dd-monster-data}}
+\subsection{The D\&D Monster Data}\label{the-dd-monster-data}}
 
 We take the stat-block of each monster from the
 \href{https://5etools-mirror-1.github.io/}{\texttt{5e.tools}} database
@@ -129,8 +170,7 @@ repository for reference:
 \end{itemize}
 
 \hypertarget{feature-extraction--selection}{%
-\section{Feature Extraction \&
-Selection}\label{feature-extraction--selection}}
+\subsection{Feature Extraction \& Selection}\label{feature-extraction--selection}}
 
 The curated
 \href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/data/dnd-5e-monsters.csv}{\texttt{dnd-5e-monsters.csv}}
@@ -222,7 +262,7 @@ See Table \ref{tab:final-dataset} for the final feature set we used for our mach
 
 
 \hypertarget{datset-partitioning}{%
-\section{Datset partitioning}\label{datset-partitioning}}
+\subsection{Datset partitioning}\label{datset-partitioning}}
 
 We take the prepared dataset and train multiple machine learning
 classifiers. We use 80\% of the randomly permuted data as the training
@@ -251,7 +291,7 @@ Validate & 16\% \\
 \end{table}
 
 \hypertarget{model-specification}{%
-\section{Model Specification}\label{model-specification}}
+\subsection{Model Specification}\label{model-specification}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -308,9 +348,19 @@ Validate & 16\% \\
 \end{enumerate}
 
 \hypertarget{model-selection}{%
-\section{Model Selection}\label{model-selection}}
+\subsection{Model Selection}\label{model-selection}}
+
+\section{Evaluation}
+
+\section{Discussion}
+
+\subsection{Challenges Faced}
+
+\subsection{Lessons Learned}
 
 \clearpage
+
+\section{Bibliography}
 
 \bibliographystyle{ieee}
 \bibliography{report}
@@ -318,7 +368,6 @@ Validate & 16\% \\
 \clearpage
 
 \section{Appendix}
-
 
 \begin{table}[!htbp] \centering 
 	\caption{\bfseries Initial Dataset} 
