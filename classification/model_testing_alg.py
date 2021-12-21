@@ -24,9 +24,8 @@ def bulk_test_entries():
     #First load the data
     mon_data = datum.retrieve_monster_dataset(tagged_trait = True)
     #Isolate the ELO column specifically.
-    
-    #Just like normal, split the tail off to be the labels
-    #X, Y = datum.seperate_data(monster_data)
+    #ELO is on the last column.
+    X, Y = datum.seperate_data(monster_data)
     
     #Get the optimal classifiers
     KNN_classifier = KNN.best_classifier()
@@ -39,7 +38,7 @@ def bulk_test_entries():
     XGB_classifier = KGB.best_classifier()
     
     #Now we do mass testing
-    for i in mon_data:
+    for i in Y:
         print(KNN_classifier.predict(i))
         print(SVM_classifier.predict(i))
         print(LRG_classifier.predict(i))
