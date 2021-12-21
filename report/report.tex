@@ -114,7 +114,6 @@ monster lethality than the supplied CR score.
 		\item XGBoost Classifier.
 	\end{itemize}
 \end{itemize}
-\vspace*{1em}
 
 {\large\scshape Alex Washburn}
 
@@ -131,7 +130,6 @@ monster lethality than the supplied CR score.
 		\item XGBoost Classifier.
 	\end{itemize}
 \end{itemize}
-
 
 \section{State-of-the-art}
 
@@ -339,6 +337,7 @@ Validate & 16\% \\
   once constructed, but can be incredibly time consuming to build.
   We decided to try our luck with this model and see if an effective
   classifier could be built within a reasonable time frame.
+  We might get a surprising result, biut not placing a lot of hope in this model.
 \item
   \textbf{K Nearest Neighbors:} A very simple model with a theoretical bound on it's maximum inaccuracy.
   Because of our familiarity with this model from the extensive discussion in class and it's prominent presence in our first homework, we chose this as our initial classifier to get our bearing and some quick benchmarking numbers.
@@ -414,16 +413,70 @@ The resulting measured scores of our evaluation metrics are listed in Table \ref
 
 \section{Discussion}
 
+\subsection{Experimental Results}
+
+Our three best performing models, when considering tier list \texttt{[1, 5]} were the K nearest neighbors, the multi-layer perceptron, and the X gradient boosting classifiers with F1 scores of \texttt{0.7375}, \texttt{0.7493}, and \texttt{0.7633}, respectively.
+On the larger tier lists \texttt{[0, 10]} and \texttt{[0, 20]}, all models performed poorly in roughly equal measure.
+Of all the models, the support vector classification appeared to degrade in performance the least and hence can be considered the most robust with respect to changing multi-class output ranges.
+The poor performance of the models when predicting for larger tier list is due to the lack of time to perform tailored model selection for them.
+Consequently, we will omit them from further discussion.
+
+The predictive capabilities of the decision tree model were by far the least effective.
+This is not a surprising result, as we did not expect the model to be highly performant.
+To the contrary, a decision tree model with a strong predictive power would have been quite surprising and caused us to interpret the decision tree from insight into the structure of our dataset observations.
+
+The Multinomial Naive Bayes model performed the second worst.
+This was a bit surprising at first.
+However after some consideration, we believe that the naive assumption tof each feature being independent of all others is likely false.
+Maybe features not dropped by the decorrelation pass still had ``high'' correlation within $[0.25, 0.6)$.
+This likely hampered the efficacy of the Naive Bayes model.
+
+
+Logistic regression performed just shy of our top three models mentioned above.
+This suggests that there may be some linear correspondence between one or more of the features and the observed Elo labels.
+Further inspection of the model parameters may yield some insightful discoveries.
+
+Similarly, the support vector machines assembled into a ove-vs-one classifier had very respectable, but not quite the best, performance.
+With further dedication to model selection, it may have easily reached the same caliber as our top three contenders.
+
+The random forest model, along with the logistic regression and support vector machine models, can be considered in a ``second place'' ranking compared to the top performing  K nearest neighbors, the multi-layer perceptron, and the X gradient boosting models.
+We beleive that more exploration with each model is warranted.
+However, we can sagfely drop the decision tree and naive Bayes models from consideration during the future work of performing model selection for ``tier lists'' \texttt{[0, 10]} and \texttt{[0, 20]}.
+
+Overall, the predictive capabilities for small the smallest tier list is significant, though far from optimal.
+With roughly 75\% ``correctness'' for a given metric, the top classifiers out perform any individual guessing in cases where the combat encounter's outcome is not a foregone conclusion. 
+Further tuning of the models for the tier list \texttt{[0, 20]} would have allowed for a quantitative comparison of the disparity between the D\&D source material's listed CR score $cr \in [1, 20] \subset \mathbb{N}$ and the classifier's predicted combat tier $pred \in [1, 20] \subset \mathbb{N}$.
+Future work, if pursued, will be directed towards this hypothesis testing, quantifiable and falsifiable observation.
+
 \subsection{Challenges Faced}
 \label{sec:challenges}
 
 Originally, the plan was to do a more in-depth analysis of magical items. This hit a snag when great difficulty was found with the automated combat simulator being used for the dataset generation. In particular, the libraries had many conflicts and missing sections. The uploader had accidentally pushed an experimental version, which called upon new functions not found in the original. Additionally, an entire section of the simulation would have remained broken, greatly reducing the accuracy of the predictions in regards to creatures and classes with spell-casting capability. We scaled this back even further, attempting to simulate basic combat between brawlers and simple creatures, only to get heavily skewed results that were highly questionable, such as a greater than 70\% loss rate for aboleths against itself out of 10000 runs. Similarly, team combat ended the same way, rendering even a simple simulation of basic mechanics completely useless.
 \newline
-Eventually, it was decided to use a dataset that already had computed values based on effectiveness. This use of "Elo rating system" is based on the same one used for competitive zero-sum games, and is relatively well understood. The source used their own \href{https://www.dndcombat.com/dndcombat/Welcome.do}{\texttt{AI-based combat simulator}} with working class features to generate the ELO ratings, based off of survival chances and victories scored by \href{https://www.dndcombat.com/code_updates.html?v=3.51}{textt{millions of simulated fights}} run by various individuals. Although the original goal had to be changed, it was done quickly with little down-time.
+Eventually, it was decided to use a dataset that already had computed values based on effectiveness. This use of "Elo rating system" is based on the same one used for competitive zero-sum games, and is relatively well understood. The source used their own \href{https://www.dndcombat.com/dndcombat/Welcome.do}{\texttt{AI-based combat simulator}} with working class features to generate the ELO ratings, based off of survival chances and victories scored by \href{https://www.dndcombat.com/code_updates.html?v=3.51}{\texttt{millions of simulated fights}} run by various individuals. Although the original goal had to be changed, it was done quickly with little down-time.
 \newline
 
 
 \subsection{Lessons Learned}
+
+Most obviously, we learned that getting data in hand is important and that labeling a dataset can be a very arduous  and time-prohibitive process.
+After pivoting from magic items to monsters, the time required to perform exploratory data analysis and data curation was significant, but not unexpected.
+Better time estimation for collection, cleaning, and labeling of data for ML techniques was a huge lesson.
+
+Another large source of learning was from the model selection process.
+Initially, we had very little intuition as to which ML models would be effective for our dataset and our prediction objectives.
+The experimentation with eight very different modeling techniques provided us with a true breadth of experience from which we can draw from when undertaking further ML tasks.
+
+Finally, the amount of clock-cycles required to perform thorough model selection.
+The hyperparameter searching process for just the first tier list of \texttt{[1, 5]} consumed all of our available time, given the short supply we had due to the magic item labeling set back.
+However, we are believe that the techniques we learned during our model selections, chiefly the ``wide and sparse'' search followed by a ``targeted and dense'' search, will be exceptionally valuable in our future endeavors, both in machine learning and as a transferable skill to other computationally expensive searching problems.
+With more available time, or simple choosing the monster rather than magic item dataset from the onset, we are confident that we could have tuned the models to perform well on the larger tier lists and performed hypothesis testing between the Challenge Rating system and our predictor(s).
+Both authors are interested in continued work on this project into the initial weeks of winter break to see if we can quickly get the project to a state that it is capable of hypothesis testing that the ML classifiers can out perform the published monster CR ratings.
+
+In summary the authors gained multiple valuable insights into the application of and challenges with machine learning as a predictive problem solving technique.
+The production of functional classifiers and the rigorous evaluation via multiple metrics also demonstrates the authors' developed competency with machine learning techniques.
+We hope that the CSCI-795 Machine Learning seminar was at least one tenth as enriching for Professor Raja as it was for her students.
+
 
 \clearpage
 

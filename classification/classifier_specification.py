@@ -181,7 +181,6 @@ def evaluate_predictions(Y_eval, Y_score, num_classes, verbose=True):
         print("  Precision Score:", result['Precision'])
         print("  Recall Score:   ", result['Recall'   ])
         print("  F1 Score:       ", result['F1'       ])
-        print("  ROC AUC Score:  ", result['ROC AUC'  ])
         print("")
 
     return result
