@@ -98,15 +98,20 @@ monster lethality than the supplied CR score.
 \clearpage
 \pagebreak
 
-\section{Team Member Roles}
+\section{Team Members' Roles}
 
 
 {\large\scshape John Lee}
 
 \begin{itemize}
 	\item Retrofitted and patched D\&D combat simulator script (too much effort).
-	\item Build and evaluated KNN, Logistic Regression, Naive Bayes, and XGBoost models.
 	\item Authored project report and constructed presentation slide deck.
+	\item Built, tuned, and evaluated the following models:
+	\begin{itemize}
+		\item KNN-Classifier
+		\item Naive Bayes Classifier
+		\item XGBoost Classifier.
+	\end{itemize}
 \end{itemize}
 \vspace*{1em}
 
@@ -114,8 +119,16 @@ monster lethality than the supplied CR score.
 
 \begin{itemize}
 	\item Collected and curated D\&D monster dataset.
-	\item Build and evaluated ANN, Decision Tree, Random Forest, and SVM, models.
 	\item Authored project report and composed demo video.
+	\begin{itemize}
+	\item Built, tuned, and evaluated the following models:
+		\item Decision Tree Classifier
+		\item Logisitc Regression Classifier
+		\item Multi-layer Perceptron Classifier
+		\item Random Forest Classifier
+		\item Suport Vector (One-vs-one) Classifier
+		\item XGBoost Classifier.
+	\end{itemize}
 \end{itemize}
 
 
@@ -125,14 +138,15 @@ Some work has been done on applying ML to table top role playing games (TTRPGs) 
 Much of the work revolves around the more tractable problem of selecting appropriate ambient music choices for players to experience based on the current emotional tone of the game \cite{ferreira2017mtg, risi2020increasing, padovani2017bardo, ferreira2020computer}.
 However, the most popular TTRPG, Dungeons and Dragons (D\&D) has been used as a difficult test-bed for ML experimentation \cite{martin2018dungeons}.
 This particular previous work, while quite notable, focused entirely on non-combat aspects of D\&D, eschewing a core component and past time of D\&D; resolving conflict via numerical simulation.
-In our project we will grapple with this numeric aspect of D\&D, focusing on a small subset of the D\&D combat system; possession and usage of magical items.
+In our project we will grapple with this numeric aspect of D\&D, focusing on a small subset of the D\&D combat system; quantifying the relative lethality of a monster.
 To the best of the author's knowledge, the proposed project will be the first serious attempt to apply machine learning to a numerical aspect of D\&D.
 Consequently, there is no \emph{known} previous on which to draw a comparison.
+
 
 \section{Approach}
 
 \hypertarget{the-dd-monster-data}{%
-\subsection{The D\&D Monster Data}\label{the-dd-monster-data}}
+\subsection{D\&D Monster Data}\label{the-dd-monster-data}}
 
 We take the stat-block of each monster from the
 \href{https://5etools-mirror-1.github.io/}{\texttt{5e.tools}} database
@@ -144,7 +158,7 @@ Elo Ranks scores on
 are continually updated. The Elo observations were taken on
 \texttt{2021-12-08}.
 
-The raw data used for this project has been stored within the repository
+The raw data used for this project exists within the repository
 for reference:
 
 \begin{itemize}
@@ -168,8 +182,7 @@ compiler \href{https://www.haskell.org/ghc/download.html}{GHC} and build
 tool \href{https://www.haskell.org/cabal/download.html}{\texttt{cabal}}
 are required.
 
-The source code for the \texttt{curate-json} tool has been stored within
-the repository for reference:
+The source code for the \texttt{curate-json} tool  within the repository for reference:
 
 \begin{itemize}
 \tightlist
@@ -186,8 +199,7 @@ installed, will replicate the data curation used for this project. The
 \texttt{curate-dataset.sh} script will place the curated dataset in the
 \texttt{data} directory.
 
-The curated data used for this project has been stored within the
-repository for reference:
+The curated data used for this project exists within the repository for reference:
 
 \begin{itemize}
 \tightlist
@@ -303,7 +315,7 @@ the training set; comprised of the "learning" and validation subsets.
 	\caption{Distribution for partitioning dataset,
 		stratified by \texttt{\textquotesingle{}Elo\ Rank\textquotesingle{}}}
 	\label{tab:shrunk-observations}
-\begin{longtable}[]{@{}cr@{}}
+\begin{longtable}[]{@{}lr@{}}
 \toprule
 Set & Ratio \\
 \midrule
@@ -388,6 +400,16 @@ The hyperparameters resulting from our model selection process can be found by r
 
 
 \section{Evaluation}
+
+We trained and cross validated each model with the hyperparameters obtained from model selection.
+Then we had each model train on the entire training set.
+Subsequently, each model was used to perform predictions on the testing set.
+The predictions were evaluated via the following metrics; \emph{precision}, \emph{recall}, and \emph{F1 score}.
+
+This training, prediction, and evaluation process was applied to the cross product of the model specification set and the tier list set.
+Phrased differently, for each combination of our $3$ tier list multi-class label outputs and our $8$ specified models, we evaluated our model's performance.
+The Evaluation results are listed in Table \ref{tab:tier05}, Table \ref{tab:tier10}, and Table \ref{tab:tier10}.
+
 
 \section{Discussion}
 
@@ -849,12 +871,74 @@ Eventually, it was decided to use a dataset that already had computed values bas
 	Support Vector Machines &
 	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_SVM.py}{\texttt{classification/model\_SVM.py}
 	} \\
-	X-Gradiant Boost &
+	X-Gradient Boost &
 	\href{https://github.com/recursion-ninja/CSCI-795-ML/blob/main/classification/model_XGBoost.py}{\texttt{classification/model\_XGBoost.py}
 	} \\
 	\bottomrule
 \end{longtable}
 \end{table}
 
+
+\begin{table}[!htbp] \centering 
+	\caption{ Evaluation metrics for ``Tier List'' \texttt{[1, 5]}}
+	\label{tab:tier05}
+\begin{longtable}[]{@{}lccc@{}}
+	\toprule
+	& Precision & Recall & F1 \\
+	\midrule
+	\endhead
+	Decision Tree & 0.5974 & 0.5938 & 0.5941 \\
+	K Nearest Neighbors & 0.7433 & 0.7448 & 0.7375 \\
+	Logistic Regression & 0.7354 & 0.7344 & 0.7323 \\
+	Multinomial Naïve Bayes & 0.6501 & 0.6406 & 0.6425 \\
+	Multi-layer Perceptron & 0.7512 & 0.7500 & 0.7493 \\
+	Random Forest & 0.7305 & 0.7292 & 0.7222 \\
+	Support Vector Classification & 0.7370 & 0.7344 & 0.7326 \\
+	X Gradient Boosting & 0.7766 & 0.7656 & 0.7633 \\
+	\bottomrule
+\end{longtable}
+\end{table}
+
+
+\begin{table}[!htbp] \centering 
+	\caption{ Evaluation metrics ``Tier List'' \texttt{[1, 10]}}
+	\label{tab:tier10}
+\begin{longtable}[]{@{}lccc@{}}
+	\toprule
+	& Precision & Recall & F1 \\
+	\midrule
+	\endhead
+	Decision Tree & 0.3812 & 0.3839 & 0.3806 \\
+	K Nearest Neighbors & 0.4936 & 0.5071 & 0.4915 \\
+	Logistic Regression & 0.4972 & 0.5024 & 0.4924 \\
+	Multinomial Naïve Bayes & 0.4158 & 0.3791 & 0.3818 \\
+	Multi-layer Perceptron & 0.4427 & 0.4502 & 0.4380 \\
+	Random Forest & 0.4553 & 0.4502 & 0.4495 \\
+	Support Vector Classification & 0.4827 & 0.4882 & 0.4789 \\
+	X Gradient Boosting & 0.4642 & 0.4550 & 0.4565 \\
+	\bottomrule
+\end{longtable}
+\end{table}
+
+
+\begin{table}[!htbp] \centering 
+	\caption{ Evaluation metrics ``Tier List'' \texttt{[1, 5]}}
+	\label{tab:tier20}
+\begin{longtable}[]{@{}lccc@{}}
+	\toprule
+	& Precision & Recall & F1 \\
+	\midrule
+	\endhead
+	Decision Tree & 0.2214 & 0.2222 & 0.2159 \\
+	K Nearest Neighbors & 0.2702 & 0.2546 & 0.2513 \\
+	Logistic Regression & 0.2409 & 0.2315 & 0.2255 \\
+	Multinomial Naïve Bayes & 0.1302 & 0.1389 & 0.1217 \\
+	Multi-layer Perceptron & 0.2234 & 0.2269 & 0.2138 \\
+	Random Forest & 0.2796 & 0.2731 & 0.2719 \\
+	Support Vector Classification & 0.3092 & 0.3056 & 0.2999 \\
+	X Gradient Boosting & 0.2997 & 0.3056 & 0.2920 \\
+	\bottomrule
+\end{longtable}
+\end{table}
 
 \end{document}
