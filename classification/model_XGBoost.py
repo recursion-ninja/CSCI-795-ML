@@ -1,7 +1,7 @@
 from classifier_specification import STATIC_SEED, model_evaluation
 from featureset_specification import default_feature_specification
-
-import xgboost as xgb
+from xgboost                  import XGBClassifier
+from copy                     import deepcopy
 
 
 #########################################
@@ -9,9 +9,9 @@ import xgboost as xgb
 #########################################
 
 
-class_count = 5
+class_count = 10
 
-classifier  = xgb.XGBClassifier()
+classifier  = XGBClassifier()
 
 designation = 'X Gradient Boosting'
 
@@ -29,7 +29,7 @@ hyperparameter_values = { 'objective'         : 'multi:softprob'
 search_grid_options   = { 'objective'         : [ 'multi:softprob' ]
                         , 'eval_metric'       : [ 'mlogloss' ]
                         , 'num_class'         : [ class_count ]
-                        , 'n_estimators'      : [  50, 100, 150, 200 ]
+                        , 'n_estimators'      : [   50, 100, 150, 200 ]
                         , 'use_label_encoder' : [ False ]
                         , 'colsample_bytree'  : [ i/10.0 for i in range(1, 10) ]
                         , 'gamma'             : [ i/10.0 for i in range(6) ]
@@ -44,16 +44,34 @@ search_grid_options   = { 'objective'         : [ 'multi:softprob' ]
 #########################################
 
 
-def best_classifier(tiers=5):
-    return (classifier.set_params(**hyperparameter_values))
-
-
 evaluation_parameters = { 'classifier_label'     : designation
                         , 'classifier'           : classifier
                         , 'dataset_params'       : default_feature_specification
                         , 'hyperspace_params'    : search_grid_options
                         , 'best_hyperparameters' : hyperparameter_values
                         }
+t_05 = deepcopy(evaluation_parameters)
+t_10 = deepcopy(evaluation_parameters)
+t_10['dataset_params']['standardized_label_classes'] = 10
+t_20 = deepcopy(evaluation_parameters)
+t_20['dataset_params']['standardized_label_classes'] = 20
+tiered_parameters     = {  5: t_05
+                        , 10: t_10
+                        , 20: t_20
+                        }
 
 
-model_evaluation(**evaluation_parameters)
+def best_classifier(tiers=5):
+    return (classifier.set_params(hyperparameter_values))
+
+
+def tier_parameters(tiers=5):
+    return tiered_parameters[tiers] 
+
+
+def main():
+    model_evaluation(**evaluation_parameters)
+
+
+if __name__ == "__main__":
+    main()

@@ -6,6 +6,7 @@ Compares all predicted values for all classifiers, for visual reference.
 #Import the main dataset processing stuff
 from classifier_specification import model_evaluation
 from featureset_specification import TIERS_SET
+from copy                     import deepclone
 #Import the models
 import model_DecisionTree       as  DT
 import model_KNN                as KNN
@@ -56,7 +57,10 @@ def generate_evaluation_table(param_list):
                     + (('| {:^' + str(max_column) + '} ') * num_column)
                     +   '|'
                     )
-    header_str = format_str.format('', 'Precision', 'Recall', 'F1')
+    
+    headers      = deepclone(keys_wlog)
+    headers['1'] = ''
+    header_str   = format_str.format(headers.values())
 
     print(header_str)
     print(border_str)
