@@ -1,8 +1,4 @@
-### ASCIInema recording orientating and demonstrating aspects of our project:
+### [**ASCIInema**](https://asciinema.org/) recording orientating and demonstrating aspects of our project:
 ---
 
-<p align="center">
-  <img width="600" src="./demo.svg">
-</p>
-
-<!-- [![asciicast](https://asciinema.org/a/457909)](https://asciinema.org/a/457909) -->
+[![asciicast](./demo.svg)](https://asciinema.org/a/457909)
