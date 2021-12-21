@@ -6,12 +6,15 @@ import functools         as f
 from sklearn.preprocessing import LabelBinarizer, QuantileTransformer
 
 
-def retreive_monster_dataset(compress=True, textual=False, tagged_damage=False, tagged_trait=False, standardized_label_classes=None, decorrelate=None):
+def retreive_monster_dataset(compress=True, textual=False, tagged_damage=False, tagged_spell=False, tagged_trait=False, standardized_label_classes=None, decorrelate=None):
     absPath = p.Path(__file__).parent.resolve()
     dataset = pd.read_csv(absPath.parent.joinpath('data','dnd-5e-monsters.csv'), sep=',')
 
     if tagged_damage:
         dataset = inclusionBitEncodeColumn(dataset, 'Damage Tags', 'Damage')
+
+    if tagged_spell:
+        dataset = inclusionBitEncodeColumn(dataset, 'Spellcasting Tags', 'Spellcasting')
 
     if tagged_trait:
         dataset = inclusionBitEncodeColumn(dataset, 'Trait Tags', '')
@@ -52,9 +55,21 @@ def decorrelate_columns(df, threshold=0.6):
                     cV |= rV
 
     for proxies in corr_set:
-        kept = proxies.pop()
+        # Keep column from proxies with widest range of values
+        kept = None
+        best = 0
+        for col in proxies:
+            width = df[col].max() - df[col].min()
+            if width > best:
+                best = width
+                kept = col
+                
+        proxies.remove(kept)
+
+        print(        "[*] Proxy   :", kept)
         for extra in proxies:
             if extra in df.columns:
+                print("[v] Dropping:", extra)
                 df.drop(extra, 1, inplace=True)
 
     return df
@@ -143,6 +158,7 @@ def standarize_data_set(df, colName='Elo Rank', class_count=None):
     if class_count == 20:
         df.loc[:,colName] *=4.5
         df.loc[:,colName] +=10
+        df[colName] = df[colName].apply(round)
         setType(df, colName, np.uint8)
         df.drop(df.loc[df[colName] >= 20].index, inplace=True)
 #        df.loc[:,colName] +=1
@@ -150,6 +166,7 @@ def standarize_data_set(df, colName='Elo Rank', class_count=None):
     elif class_count == 10:
         df.loc[:,colName] *=2.5
         df.loc[:,colName] +=5
+        df[colName] = df[colName].apply(round)
         setType(df, colName, np.uint8)
         df.drop(df.loc[df[colName] >= 10].index, inplace=True)
 #        df.loc[:,colName] +=1
@@ -157,12 +174,14 @@ def standarize_data_set(df, colName='Elo Rank', class_count=None):
     elif class_count == 5:
         df.loc[:,colName] *=1.33
         df.loc[:,colName] +=3
+        df[colName] = df[colName].apply(round)
         setType(df, colName, np.uint8)
         df.drop(df.loc[df[colName] >= 5].index, inplace=True)
 #        df.loc[:,colName] +=1
     else:
         df.loc[:,colName] *=0.5
         df.loc[:,colName] +=1
+        df[colName] = df[colName].apply(round)
         setType(df, colName, np.uint8)
         df.drop(df.loc[df[colName] >= 2].index, inplace=True)
 
