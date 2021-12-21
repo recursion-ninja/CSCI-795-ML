@@ -446,6 +446,24 @@ Consequently, we dropped the following features:
 |  95 | Elo Rank                 | Integral  |
 
 
+## Datset partitioning
+
+We take the prepared dataset and train multiple machine learning classifiers.
+We use 80% of the randomly permuted data as the training set and the remaining 20% as the test set.
+This partition data was stratified by the `'Elo Rank'` column to ensure that each tier is represented.
+Furthermore, we partition the training set again, using 80% as a learning set and the remaining 20% as the validation set.
+Model selection was performed on the training set; comprised of the "learning" and validation subsets.
+
+> The dataset was paritioned according to the following distribution, stratified by `'Elo Rank'`:
+
+|   Set    | Ratio |
+|:--------:|------:|
+| Test     |  20%  |
+| Train    |  80%  |
+| Learn    |  64%  |
+| Validate |  16%  |
+
+
 ## Model Specification
 
   1.  **Decision Tree**
@@ -486,20 +504,4 @@ Consequently, we dropped the following features:
       This is the model we had the least knowledge of, but it served as a great learning opportunity, both from a technical and theoretic perspective.
 
 
-## Methodology
-
-We take the prepared dataset and train multiple machine learning classifiers.
-We use 80% of the randomly permuted data as the training set and the remaining 20% as the test set.
-This partition data was stratified by the `'Elo Rank'` column to ensure that each tier is represented.
-Furthermore, we partition the training set again, using 80% as a learning set and the remaining 20% as the validation set.
-
-> The dataset was paritioned according to the following distribution, stratified by `'Elo Rank'`:
-
-|   Set    | Ratio |
-|:--------:|------:|
-| Test     |  20%  |
-| Train    |  80%  |
-| Learn    |  64%  |
-| Validate |  16%  |
-
-We then performed model selection
+## Model Selection
