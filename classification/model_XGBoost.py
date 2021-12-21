@@ -29,12 +29,12 @@ hyperparameter_values = { 'objective'         : 'multi:softprob'
 search_grid_options   = { 'objective'         : [ 'multi:softprob' ]
                         , 'eval_metric'       : [ 'mlogloss' ]
                         , 'num_class'         : [ class_count ]
-                        , 'n_estimators'      : [   50, 100] #, 150, 200 ]
+                        , 'n_estimators'      : [   50 ] # , 100, 150, 200 ]
                         , 'use_label_encoder' : [ False ]
-                        , 'colsample_bytree'  : [ i/10.0 for i in range(1, 3) ]
-                        , 'gamma'             : [ i/10.0 for i in range(3) ]
-                        , 'learning_rate'     : [ 0.1, 0.2, 0.3 ] # [ 0.01, 0.1, 0.2, 0.3 ]
-                        , 'max_depth'         : range(3, 6) # range(3, 10)
+                        , 'colsample_bytree'  : [ 0.2 ] # [ i/10.0 for i in range(1, 10) ]
+                        , 'gamma'             : [ i/10.0 for i in range(6) ]
+                        , 'learning_rate'     : [ 0.2 ] # [ 0.1, 0.2, 0.3 ] # [ 0.01, 0.1, 0.2, 0.3 ]
+                        , 'max_depth'         : range(3, 4) # range(3, 10)
                         , 'random_state'      : [STATIC_SEED]
                         }
 

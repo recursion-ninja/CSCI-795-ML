@@ -44,29 +44,34 @@ def generate_evaluation_table(param_list):
         eval_results.append( ( params, model_evaluation(**params) ) )
 
     keys_wlog  = eval_results[0][1].keys()
+    num_column = len(keys_wlog)
+    
     max_column = len(max(keys_wlog , key=lambda keyval: len(keyval)))
     max_label  = len(max(param_list, key=lambda params: len(params[label_index]))[label_index])
-    border_str =    ( '|:' + '-' * max_label  + '-'
-                    + '|:' + '-' * max_column + ':'
-                    + '|:' + '-' * max_column + ':'
-                    + '|:' + '-' * max_column + ':|'
+    border_str =    (   '|:' + '-' * max_label  + '-'
+                    + (('|:' + '-' * max_column + ':') * num_column)
+                    +   '|'
                     )
-    format_str =    ( '| {:<' + str(max_label)  + '} '
-                    + '| {:^' + str(max_column) + '} '
-                    + '| {:^' + str(max_column) + '} '
-                    + '| {:^' + str(max_column) + '} |'
+    format_str =    (   '| {:<' + str(max_label)  + '} '
+                    + (('| {:^' + str(max_column) + '} ') * num_column)
+                    +   '|'
                     )
     header_str = format_str.format('', 'Precision', 'Recall', 'F1')
 
     print(header_str)
     print(border_str)
     for params, result in eval_results:
-        print( format_str.format( params[label_index], getDecimal(result, 'Precision'), getDecimal(result, 'Recall'), getDecimal(result, 'F1') ) )
+        result[label_index] = params[label_index]
+        for key in keys_wlog:
+            result[key] = getDecimal(result, key)
+        outputs = result.values()
+        print( format_str.format(**outputs) )
 
 
 def getDecimal(d, k):
     double_str = '{:<06}'
-    return double_str.format(d[k])
+    d[k] = double_str.format(d[k])
+    return d[k]
     
 
 def main():

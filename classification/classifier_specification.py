@@ -164,9 +164,14 @@ def describe_data_set(X, label):
 
 
 def evaluate_predictions(Y_eval, Y_score, verbose=True):
-    result =    { 'Precision' : round(metrics.precision_score(Y_eval, Y_score, average='weighted'), 4)
-                , 'Recall'    : round(metrics.recall_score(   Y_eval, Y_score, average='weighted'), 4)
-                , 'F1'        : round(metrics.f1_score(       Y_eval, Y_score, average='weighted'), 4)
+    result =    { 'Accuracy'       : round(metrics.accuracy_score(     Y_eval, Y_score                    ), 4)
+                , 'F1'             : round(metrics.f1_score(           Y_eval, Y_score, average='weighted'), 4)
+                , 'Recall'         : round(metrics.recall_score(       Y_eval, Y_score, average='weighted'), 4)
+                , 'Precision'      : round(metrics.precision_score(    Y_eval, Y_score, average='weighted'), 4)
+#                , 'LRAP'           : round(metrics.label_ranking_average_precision_score(Y_eval, Y_score  ), 4)
+                , 'Converge Error' : round(metrics.coverage_error(     Y_eval, Y_score                    ), 4)
+                , 'Ranking Loss'   : round(metrics.label_ranking_loss( Y_eval, Y_score                    ), 4)
+#                , 'ROC AUC'   : round(metrics.roc_auc_score(  Y_eval, Y_score, average='weighted', multi_class='ovo'), 4)
                 }
 
     if verbose:
@@ -175,6 +180,7 @@ def evaluate_predictions(Y_eval, Y_score, verbose=True):
         print("  Precision Score:", result['Precision'])
         print("  Recall Score:   ", result['Recall'   ])
         print("  F1 Score:       ", result['F1'       ])
+#        print("  ROC AUC Score:  ", result['ROC AUC'  ])
         print("")
 
     return result
