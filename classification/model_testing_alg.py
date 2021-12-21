@@ -23,9 +23,6 @@ def bulk_test_entries():
     
     #First load the data
     mon_data = datum.retrieve_monster_dataset(tagged_trait = True)
-    #Isolate the ELO column specifically.
-    #ELO is on the last column.
-    X, Y = modsel.seperate_data(mon_data)
     
     #Get the optimal classifiers
     KNN_classifier = KNN.best_classifier()
@@ -35,19 +32,36 @@ def bulk_test_entries():
     DT_classifier  = DT.best_classifier()
     RF_classifier  = RF.best_classifier()
     NN_classifier  = NN.best_classifier()
-    XGB_classifier = KGB.best_classifier()
+    XGB_classifier = XGB.best_classifier()
+    
+    #Isolate the ELO column specifically.
+    #ELO is on the last column.
+    X, Y = modsel.seperate_data(mon_data)
+    #Train data split for training
+    X_full, X_train, X_valid, X_test, Y_full, Y_train, Y_valid, Y_test = modsel.train_valid_test(X, Y, 0.2, 0.2)
+    #Train up the different classifiers using optimized results.
+    KNN_trained = KNN_classifier.fit(X_full, Y_full)
+    SVM_trained = SVM_classifier.fit(X_full, Y_full)
+    LRG_trained = LRG_classifier.fit(X_full, Y_full)
+    NB_trained = NB_classifier.fit(X_full, Y_full)
+    DT_trained = DT_classifier.fit(X_full, Y_full)
+    RF_trained = RF_classifier.fit(X_full, Y_full)
+    NN_trained = NN_classifier.fit(X_full, Y_full)
+    XGB_trained = XGB_classifier.fit(X_full, Y_full)
+    
+    #Now check it's comparator.
     
     #Now we do mass testing
-    for i in Y:
-        print(KNN_classifier.predict(i))
-        print(SVM_classifier.predict(i))
-        print(LRG_classifier.predict(i))
-        print( NB_classifier.predict(i))
-        print( DT_classifier.predict(i))
-        print( RF_classifier.predict(i))
-        print( NN_classifier.predict(i))
-        print(XGB_classifier.predict(i))
-
+    for i in range(1, len(Y)):
+        print("K Nearest Nbr Predicted Value: ", KNN_trained.predict(X[i]), "\n")
+        print("SVM           Predicted Value: ", SVM_trained.predict(X[i]), "\n")
+        print("Log Regess    Predicted Value: ", LRG_trained.predict(X[i]), "\n")
+        print("Naive Bayes   Predicted Value: ",  NB_trained.predict(X[i]), "\n")
+        print("D Tree        Predicted Value: ",  DT_trained.predict(X[i]), "\n")
+        print("R Forest      Predicted Value: ",  RF_trained.predict(X[i]), "\n")
+        print("Neural Net    Predicted Value: ",  NN_trained.predict(X[i]), "\n")
+        print("XGBoost       Predicted Value: ", XGB_trained.predict(X[i]), "\n")
+        print("                 Actual Value: ", Y[i], "\n\n")
 #test_data = datum.retrieve_monster_dataset(tagged_trait = True)
 #print(test_data)
 bulk_test_entries()
