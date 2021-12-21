@@ -11,6 +11,8 @@ default_feature_specification = { 'tagged_trait'               : True
                                 , 'decorrelate'                : 0.6
                                 }
 
+TIERS_SET = [ 5, 10, 20 ]
+
 
 def retrieve_monster_dataset(compress=True, textual=False, tagged_damage=False, tagged_spell=False, tagged_trait=False, standardized_label_classes=None, decorrelate=None):
     absPath = p.Path(__file__).parent.resolve()

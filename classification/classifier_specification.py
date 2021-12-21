@@ -2,21 +2,26 @@ import featureset_specification as datum
 import numpy                    as np
 import pandas                   as pd
 
-from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn                 import metrics
-
+from sklearn.exceptions      import ConvergenceWarning
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 # It is nice to remove the deprecation warnings.
 # They really distract from the important output!
+# Also affects subprocesses, forcing proper behavior with parallelism.
+import os
+import sys
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
-#warnings.simplefilter(action='ignore', category=ConvergenceWarning)
+if not sys.warnoptions:
+    warnings.simplefilter("ignore")
+    os.environ["PYTHONWARNINGS"] = "ignore"
+
 
 # A random seed, but fixed seed to use in randomized function calls.
 STATIC_SEED = 0xf90b36c2
 
 
-def model_evaluation(classifier_label, classifier, dataset_params, final_evaluation=False, hyperspace_params=None, best_hyperparameters=None):
+def model_evaluation(classifier_label, classifier, dataset_params, final_evaluation=False, hyperspace_params=None, best_hyperparameters=None, verbose=True):
 
 
     #################################
@@ -78,14 +83,16 @@ def model_evaluation(classifier_label, classifier, dataset_params, final_evaluat
 
     classifier_model = classifier.set_params(**best_hyperparameters)
     classifier_model.fit(X_learn, Y_learn)
-    describe_model(classifier_label, best_hyperparameters)
-    describe_data_set(X_learn, "  Using " + label_construction + " training dataset containing:")
+    if verbose:
+        describe_model(classifier_label, best_hyperparameters)
+        describe_data_set(X_learn, "  Using " + label_construction + " training dataset containing:")
 
     Y_score = classifier_model.predict(X_eval)
 
-    print("Generated predictions for evaluation\n")
-    describe_data_set(X_test, "  Using " + label_prediction  + " dataset containing:")
-    evaluate_predictions(Y_eval, Y_score)
+    if verbose:
+        print("Generated predictions for evaluation\n")
+        describe_data_set(X_test, "  Using " + label_prediction  + " dataset containing:")
+    return evaluate_predictions(Y_eval, Y_score, verbose)
 
 
 # Given a Pandas data frame, partition the data frame into two segements.
@@ -156,13 +163,21 @@ def describe_data_set(X, label):
     print("")
 
 
-def evaluate_predictions(Y_eval, Y_score):
-    inspect_confusion_matrix(Y_eval, Y_score)
-    print("")
-    print("  Precision Score:", round(metrics.precision_score(Y_eval, Y_score, average='weighted'), 4))
-    print("  Recall Score:   ", round(metrics.recall_score(   Y_eval, Y_score, average='weighted'), 4))
-    print("  F1 Score:       ", round(metrics.f1_score(       Y_eval, Y_score, average='weighted'), 4))
-    print("")
+def evaluate_predictions(Y_eval, Y_score, verbose=True):
+    result =    { 'Precision' : round(metrics.precision_score(Y_eval, Y_score, average='weighted'), 4)
+                , 'Recall'    : round(metrics.recall_score(   Y_eval, Y_score, average='weighted'), 4)
+                , 'F1'        : round(metrics.f1_score(       Y_eval, Y_score, average='weighted'), 4)
+                }
+
+    if verbose:
+        inspect_confusion_matrix(Y_eval, Y_score)
+        print("")
+        print("  Precision Score:", result['Precision'])
+        print("  Recall Score:   ", result['Recall'   ])
+        print("  F1 Score:       ", result['F1'       ])
+        print("")
+
+    return result
 
 
 def inspect_confusion_matrix(Y_true, Y_pred):
