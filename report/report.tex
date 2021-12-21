@@ -11,7 +11,6 @@
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
 \usepackage{longtable}
 \usepackage[]{microtype}
 \usepackage{parskip}
@@ -101,7 +100,34 @@ monster lethality than the supplied CR score.
 
 \section{Team Member Roles}
 
+
+{\large\scshape John Lee}
+
+\begin{itemize}
+	\item Retrofitted and patched D\&D combat simulator script (too much effort).
+	\item Build and evaluated KNN, Logistic Regression, Naive Bayes, and XGBoost models.
+	\item Authored project report and constructed presentation slide deck.
+\end{itemize}
+\vspace*{1em}
+
+{\large\scshape Alex Washburn}
+
+\begin{itemize}
+	\item Collected and curated D\&D monster dataset.
+	\item Build and evaluated ANN, Decision Tree, Random Forest, and SVM, models.
+	\item Authored project report and composed demo video.
+\end{itemize}
+
+
 \section{State-of-the-art}
+
+Some work has been done on applying ML to table top role playing games (TTRPGs) in the past \cite{rameshkumar-bailey-2020-storytelling, macinnes2019d, cavanaugh2016machine, faria2019adaptive, riedl2013interactive}.
+Much of the work revolves around the more tractable problem of selecting appropriate ambient music choices for players to experience based on the current emotional tone of the game \cite{ferreira2017mtg, risi2020increasing, padovani2017bardo, ferreira2020computer}.
+However, the most popular TTRPG, Dungeons and Dragons (D\&D) has been used as a difficult test-bed for ML experimentation \cite{martin2018dungeons}.
+This particular previous work, while quite notable, focused entirely on non-combat aspects of D\&D, eschewing a core component and past time of D\&D; resolving conflict via numerical simulation.
+In our project we will grapple with this numeric aspect of D\&D, focusing on a small subset of the D\&D combat system; possession and usage of magical items.
+To the best of the author's knowledge, the proposed project will be the first serious attempt to apply machine learning to a numerical aspect of D\&D.
+Consequently, there is no \emph{known} previous on which to draw a comparison.
 
 \section{Approach}
 
@@ -362,7 +388,7 @@ Validate & 16\% \\
 
 \section{Bibliography}
 
-\bibliographystyle{ieee}
+\bibliographystyle{IEEEtran}
 \bibliography{report}
 
 \clearpage
@@ -460,7 +486,7 @@ Validate & 16\% \\
 	67 & Spellcasting & Binary \\
 	68 & Damage Tags & Textual \\
 	69 & Spellcasting Tags & Textual \\
-	70 & Trait Tags & Textual \\
+	70 & Trait Tags & Textual \\\title{\texttt{\LARGE{Predicting Magical Item Effectiveness in \\Dungeons and Dragons 5th Edition} \\\vspace{-0.35cm} {\large A Hunter College CSCI-795 Project Proposal}\\\normalsize\url{https://github.com/recursion-ninja/CSCI-795-ML}}} % Title and subtitle
 	71 & Elo Rank & Integral \\
 	\bottomrule
 \end{longtable}
