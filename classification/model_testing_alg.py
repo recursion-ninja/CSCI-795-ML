@@ -4,7 +4,7 @@ Used to compare results to see how different predictions are.
 Compares all predicted values for all classifiers, for visual reference.
 '''
 #Import the main dataset processing stuff
-import dataset_transforms as datum
+import featureset_specification as datum
 
 #Import the models
 import model_KNN as KNN
