@@ -221,7 +221,7 @@ attributes. A column summary of the initial data set is presented in Table \ref{
 For our analysis, we desire the
 \texttt{\textquotesingle{}Elo\ Rank\textquotesingle{}} to be represented
 as an integral "tier list." We extract the tier list feature by
-discretizing the the 'Elo Rank' column via following procedure:
+discretizing the 'Elo Rank' column via following procedure:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -381,6 +381,10 @@ Validate & 16\% \\
 \section{Discussion}
 
 \subsection{Challenges Faced}
+
+Originally, the plan was to do a more in-depth analysis of magical items. This hit a snag when great difficulty was found with the automated combat simulator being used for the dataset generation. In particular, the libraries had many conflicts and missing sections. The uploader had accidentally pushed an experimental version, which called upon new functions not found in the original. Additionally, an entire section of the simulation would have remained broken, greatly reducing the accuracy of the predictions in regards to creatures and classes with spell-casting capability.
+\newline
+Eventually, it was decided to use a dataset that already had computed values based on effectiveness. This use of "Elo's rating system" is based on the same one used for competitive zero-sum games, and is relatively well-understood. Although the original goal had to be changed, it was done quickly with little down-time.
 
 \subsection{Lessons Learned}
 
